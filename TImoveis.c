@@ -38,3 +38,7 @@ Imovel* criaImovel(u_int32_t id, char bairro[], char tipo[], char rua[], int num
 
     return imovel;
 }
+
+void deletaImovel(Imovel* imovel){
+    free(imovel);
+}
