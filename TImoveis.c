@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 typedef struct {
     u_int32_t id;                           // ID único do imóvel
     char bairro[50];                       // Bairro do imóvel
@@ -12,3 +14,27 @@ typedef struct {
     double latitude;               // Latitude do imóvel
     double longitude;             // Longitude do imóvel
 } Imovel;
+
+
+Imovel* criaImovel(u_int32_t id, char bairro[], char tipo[], char rua[], int numero, u_int32_t precoTotal, double precoMetroQ, char descricao[], char cep[], double latitude, double longitude){
+    Imovel* imovel = (Imovel*)malloc(sizeof(Imovel));
+    if (!imovel){
+        printf("Erro ao alocar memória para o imóvel\n");
+        exit(1);
+    }
+
+    strcpy(imovel->bairro, bairro);
+    strcpy(imovel->tipo, tipo);
+    strcpy(imovel->rua, rua);
+    strcpy(imovel->descricao, descricao);
+    strcpy(imovel->cep, cep);
+
+    imovel->id = id;
+    imovel->numero = numero;
+    imovel->precoTotal = precoTotal;
+    imovel->precoMetroQ = precoMetroQ;
+    imovel->latitude = latitude;
+    imovel->longitude = longitude;
+
+    return imovel;
+}
