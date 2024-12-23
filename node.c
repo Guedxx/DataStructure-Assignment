@@ -16,7 +16,7 @@ typedef struct Node {
     u_int32_t* children; // Posição dos filhos no arquivo
 } Node;
 
-void Node_new(char* data, const bool is_leaf, const int t) {
+void Node_new(char* data, const bool is_leaf, const size_t t) {
     Node* node = (Node*) data;
     node->is_leaf = is_leaf;
     node->num_keys = 0;
