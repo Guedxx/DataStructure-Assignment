@@ -8,5 +8,4 @@ include_directories(.)
 add_executable(DataStructure_Assignment
     TARVBM.c
     TARVBM.h
-        node.c
         bp_tree.c)
