@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdint.h>
 
 #define KEYS(node) ((u_int32_t*) (node + 1))
 #define CHILDREN(node, t) ( \
