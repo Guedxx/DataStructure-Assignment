@@ -42,7 +42,7 @@ BPTree BPTree_new(const int t, const char* filename) {
     strcpy(bp_tree.filename, filename);
 
     // Nodes
-    bp_tree.node_fd = open(filename, O_RDWR | O_CREAT);
+    bp_tree.node_fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if (bp_tree.node_fd == -1) {
         perror("Cant open file: ");
         perror(filename);
@@ -57,7 +57,7 @@ BPTree BPTree_new(const int t, const char* filename) {
     char free_name[strlen(filename) + 5];
     strcpy(free_name, filename);
     strcat(free_name, ".free");
-    bp_tree.free_fd = open(free_name, O_RDWR | O_CREAT);
+    bp_tree.free_fd = open(free_name, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if (bp_tree.free_fd == -1) {
         perror("Cant open file: ");
         perror(free_name);
@@ -72,7 +72,7 @@ BPTree BPTree_new(const int t, const char* filename) {
 }
 
 void BPTree_save(const BPTree* bp_tree, const char* filename) {
-    int fd = open(filename, O_RDWR | O_CREAT);
+    int fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if (fd == -1) {
         perror("Cant open file: ");
         perror(filename);
@@ -343,23 +343,13 @@ void BPTree_print(const BPTree* bp_tree) {
 
 // Teste
 void main() {
-    BPTree bp_tree = BPTree_new(2, "bptree_data.db");
-    //BPTree bp_tree = BPTree_load("bptree.db");
+    //BPTree bp_tree = BPTree_new(2, "bptree_data.db");
+    BPTree bp_tree = BPTree_load("bptree.db");
 
 
-    BPTree_insert(&bp_tree, 1);
-    BPTree_insert(&bp_tree, 2);
-    BPTree_insert(&bp_tree, 3);
-    BPTree_insert(&bp_tree, 4);
-    BPTree_insert(&bp_tree, 5);
-    BPTree_insert(&bp_tree, 6);
-    BPTree_insert(&bp_tree, 7);
-    BPTree_insert(&bp_tree, 8);
-    BPTree_insert(&bp_tree, 9);
-
-    //BPTree_print(&bp_tree);
-
-    BPTree_insert(&bp_tree, 10);
+    for (int i = 0; i < 11; i++) {
+        //BPTree_insert(&bp_tree, i);
+    }
 
     BPTree_print(&bp_tree);
 
