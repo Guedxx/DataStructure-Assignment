@@ -6,14 +6,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define KEYS(node) ((u_int32_t*) (node + sizeof(Node)))
-#define CHILDREN(node, t) ((u_int32_t*) (node + sizeof(Node) + (2 * t - 1) * sizeof(u_int32_t)))
+#define KEYS(node) ((u_int32_t*) (node + 1))
+#define CHILDREN(node, t) ( \
+    ( \
+        ((u_int32_t*) (node + 1)) + (2 * t - 1) \
+    ) \
+)
 
-#define NODE_SIZE(t) (sizeof(Node) + ((2 * t - 1) * sizeof(u_int32_t)) + (2 * t * sizeof(u_int32_t)))
+
+#define NODE_SIZE(t) (sizeof(Node) + ((2 * (t) - 1) * sizeof(u_int32_t)) + (2 * (t) * sizeof(u_int32_t)))
+
 typedef struct Node {
     bool is_leaf;
     u_int32_t num_keys;
-    // u_int32_t* keys;     // Chaves será convertida para string para encontrar o arquivo
+    //u_int32_t keys[];     // Chaves será convertida para string para encontrar o arquivo
     // u_int32_t* children; // Posição dos filhos no arquivo
 } Node;
 

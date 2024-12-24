@@ -30,8 +30,6 @@ typedef struct BPTree {
     char filename[32];
 } BPTree;
 
-void BPTree_print_node(const BPTree * bp_tree, Node * node, int level);
-
 BPTree BPTree_new(const int t, const char* filename) {
     if (strlen(filename) > 31) {
         perror("Filename too long");
@@ -257,10 +255,7 @@ void BPTree_insert(BPTree* bp_tree, const u_int32_t key) {
     Node* root = BPTree_get_node(bp_tree, bp_tree->root);
 
     if (root->num_keys == 2 * bp_tree->t - 1) {
-
-        printf("Creating new node "); BPTree_print_node(bp_tree, root, 0); printf("\n");
         Node* new_root = BPTree_new_node(bp_tree, false);
-        printf("Created new node "); BPTree_print_node(bp_tree, root, 0); printf("\n");
 
         CHILDREN(new_root, bp_tree->t)[0] = bp_tree->root;
         bp_tree->root = BPTree_get_node_index(bp_tree, new_root);
@@ -322,6 +317,10 @@ void BPTree_print_node(const BPTree * bp_tree, Node * node, int level) {
             Node* child = BPTree_get_node(bp_tree, CHILDREN(node, bp_tree->t)[i]);
             BPTree_print_node(bp_tree, child, level + 1);
         }
+
+        for (int i = 0; i < level; i++) {
+            printf("  ");
+        }
         printf("]\n");
     }
 }
@@ -344,7 +343,7 @@ void BPTree_print(const BPTree* bp_tree) {
 
 // Teste
 void main() {
-    BPTree bp_tree = BPTree_new(5, "bptree_data.db");
+    BPTree bp_tree = BPTree_new(2, "bptree_data.db");
     //BPTree bp_tree = BPTree_load("bptree.db");
 
 
