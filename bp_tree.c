@@ -1,6 +1,3 @@
-//
-// Created by nathan on 12/23/24.
-//
 
 #define _GNU_SOURCE
 
@@ -342,7 +339,7 @@ void BPTree_print(const BPTree* bp_tree) {
 
 
 // Teste
-void main() {
+int main() {
     BPTree bp_tree = BPTree_new(2, "bptree_data.db");
     //BPTree bp_tree = BPTree_load("bptree.db");
 
@@ -366,7 +363,6 @@ void main() {
     //BPTree_save(&bp_tree, "bptree.db");
 
     BPTree_free(&bp_tree);
+
+    return 0
 }
-
-
-
