@@ -364,5 +364,5 @@ int main() {
 
     BPTree_free(&bp_tree);
 
-    return 0
+    return 0;
 }
