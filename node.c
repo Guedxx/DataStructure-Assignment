@@ -1,8 +1,5 @@
-//
-// Created by nathan on 12/23/24.
-//
-
-
+#include <string.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -37,6 +34,3 @@ void Node_copy(Node* dest, const Node* src, const size_t t) {
     memcpy(KEYS(dest), KEYS(src), (2 * t - 1) * sizeof(u_int32_t));
     memcpy(CHILDREN(dest, t), CHILDREN(src, t), 2 * t * sizeof(u_int32_t));
 }
-
-
-
