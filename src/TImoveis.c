@@ -88,7 +88,7 @@ void Imovel_from_string(Imovel* imovel, char* str){
 
 
 // test
-int main(){
+int main() {
     const int fd = open("TC_EDA.csv", O_RDONLY);
     if (fd == -1) {
         perror("open");
