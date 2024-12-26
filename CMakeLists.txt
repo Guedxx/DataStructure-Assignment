@@ -8,4 +8,4 @@ include_directories(.)
 add_executable(DataStructure_Assignment
     TARVBM.c
     TARVBM.h
-        TImoveis.c)
+        src/TImoveis.c)

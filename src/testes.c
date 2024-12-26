@@ -25,8 +25,8 @@ int main() {
 // testes read
 // int main() {
 //     falloc_start("TARVBM_test.bin");
-//     TARVBM *a = (TARVBM*) 0x4000027c;
-//     // TARVBM *a = (TARVBM*) 0x40001adc;
+//     // TARVBM *a = (TARVBM*) 0x4000027c;
+//     TARVBM *a = (TARVBM*) 0x40001adc;
 //
 //     TARVBM_imprime(a);
 //     TARVBM_libera(a);
