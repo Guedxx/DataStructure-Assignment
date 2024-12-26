@@ -88,7 +88,11 @@ void Imovel_from_string(Imovel* imovel, char* str){
 
 
 // test
+<<<<<<< HEAD
 int main() {
+=======
+/* int main(){
+>>>>>>> eb54d86 (idk now)
     const int fd = open("TC_EDA.csv", O_RDONLY);
     if (fd == -1) {
         perror("open");
@@ -106,3 +110,4 @@ int main() {
 
     munmap(data, size);
 }
+*/
