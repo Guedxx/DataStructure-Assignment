@@ -5,10 +5,7 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(.)
 
-add_executable(
-        DataStructure_Assignment
-        TImoveis.c
-        interface.c
-        node.c
-        bp_tree.c
-)
+add_executable(DataStructure_Assignment
+    TARVBM.c
+    TARVBM.h
+        TImoveis.c)
