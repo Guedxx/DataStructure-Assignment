@@ -13,7 +13,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define FILE_SIZE (1024) // 1 KB
+#define FILE_SIZE (1024 * 4) // 4 KB
 #define FIXED_ADDRESS ((void*)0x40000000)
 
 typedef struct block_header {
@@ -150,12 +150,12 @@ void* falloc_realloc(void* ptr, size_t size) {
 // int main() {
 //     falloc_start("falloc_test.bin");
 //
-//     char* str = falloc(10);
-//     strcpy(str, "Hello");
+//     char* str = falloc(50);
+//     strcpy(str, "Hello Nathan");
 //     printf("%s\n", str);
 //
 //     str = falloc_realloc(str, 20);
-//     strcat(str, " World");
+//     strcat(str, " Pedro World Tuco");
 //     printf("%s\n", str);
 //
 //     printf("Str at %p\n", str);
@@ -168,7 +168,7 @@ void* falloc_realloc(void* ptr, size_t size) {
 // int main() {
 //     falloc_start("falloc_test.bin");
 //
-//     char* str = (char*) 0x4000002a;
+//     char* str = (char*) 0x4000004e;
 //     printf("%s\n", str);
 //
 //     falloc_end();
