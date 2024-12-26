@@ -87,10 +87,7 @@ void Imovel_from_string(Imovel* imovel, char* str){
 }
 
 
-// test
-<<<<<<< HEAD
-int main() {
-=======
+// teste
 /* int main(){
 >>>>>>> eb54d86 (idk now)
     const int fd = open("TC_EDA.csv", O_RDONLY);
