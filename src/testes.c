@@ -7,7 +7,7 @@
 // testes write
 int main() {
     falloc_start("TARVBM_test.bin");
-    TARVBM *a = TARVBM_inicializa();
+    TARVBMG *a = TARVBM_inicializa();
 
     for (int i = 9; i < 55; i += 2) {
         a = TARVBM_insere(a, i, 2);

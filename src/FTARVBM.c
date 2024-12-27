@@ -1,11 +1,11 @@
 #include "FTARVBM.h"
 
-TARVBM *TARVBM_cria(int t){
-  TARVBM* novo = (TARVBM*)falloc(sizeof(TARVBM));
+TARVBMG *TARVBMG_cria(const int t){
+  TARVBMG* novo = (TARVBMG*) falloc(sizeof(TARVBMG));
   novo->nchaves = 0;
-  novo->chave =(int*)falloc(sizeof(int)*((t*2)-1));
+  novo->chave = (void**) falloc(sizeof(void*)*((t*2)-1));
   novo->folha = 1;
-  novo->filho = (TARVBM**)falloc(sizeof(TARVBM*)*t*2);
+  novo->filho = (TARVBMG**)falloc(sizeof(TARVBMG*)*t*2);
   novo->prox = NULL;
   int i;
   for(i=0; i<(t*2); i++) novo->filho[i] = NULL;
@@ -13,15 +13,15 @@ TARVBM *TARVBM_cria(int t){
 }
 
 
-TARVBM *TARVBM_inicializa(void) {
+TARVBMG *TARVBMG_inicializa() {
   return NULL;
 }
 
-void TARVBM_libera(TARVBM *a){
+void TARVBMG_libera(TARVBMG *a){
   if(a){
     if(!a->folha){
       int i;
-      for(i = 0; i <= a->nchaves; i++) TARVBM_libera(a->filho[i]);
+      for(i = 0; i <= a->nchaves; i++) TARVBMG_libera(a->filho[i]);
     }
     falloc_free(a->filho);
     falloc_free(a->chave);
@@ -29,65 +29,83 @@ void TARVBM_libera(TARVBM *a){
   }
 }
 
-TARVBM *TARVBM_busca(TARVBM *a, int mat){
+TARVBMG *TARVBMG_busca(TARVBMG *a, void* data, bool (*menor_que)(void*, void*)){
   if (!a) return NULL;
   int i = 0;
-  while ((i < a->nchaves) && (mat > a->chave[i])) i++;
-  if ((i < a->nchaves) && (a->folha) && (mat == a->chave[i])) return a;
+
+  // while ((i < a->nchaves) && (mat > a->chave[i])) i++;
+  while ((i < a->nchaves) && GT(data, a->chave[i])) i++;
+
+  // if ((i < a->nchaves) && (a->folha) && (mat == a->chave[i])) return a;
+  if ((i < a->nchaves) && (a->folha) && EQ(data, a->chave[i])) return a;
+
   if (a-> folha) return NULL;
-  if (a->chave[i] == mat) i++;
-  return TARVBM_busca(a->filho[i], mat);
+
+  // if (a->chave[i] == mat) i++;
+  if (EQ(data, a->chave[i])) i++;
+
+  return TARVBMG_busca(a->filho[i], data, menor_que);
 }
 
 
-void TARVBM_imprime_chaves(TARVBM *a){
+void TARVBMG_imprime_chaves(TARVBMG *a, void(*imprime)(void*)){
   if(!a) return;
-  TARVBM *p = a;
+  TARVBMG *p = a;
   while(p->filho[0]) p = p->filho[0];
   while(p){
     int i;
-    for(i = 0; i < p->nchaves; i++) printf("%d ", p->chave[i]);
+
+    // for(i = 0; i < p->nchaves; i++) printf("%d ", p->chave[i]);
+    for(i = 0; i < p->nchaves; i++) imprime(p->chave[i]);
+
     p = p->prox;
   }
   printf("\n");
 }
 
 
-void imp(TARVBM *a, int andar){
+void imp(TARVBMG *a, int andar, void(*imprime)(void*)){
   if(a){
     int i,j;
-    imp(a->filho[a->nchaves],andar+1);
+
+    // imp(a->filho[a->nchaves],andar+1);
+    imp(a->filho[0],andar+1, imprime);
+
+
     for(i=a->nchaves-1; i >= 0; i--){
       for(j=0; j<=andar; j++) printf("\t");
-      printf("%d\n", a->chave[i]);
-      imp(a->filho[i],andar+1);
+
+      // printf("%d\n", a->chave[i]);
+      // imp(a->filho[i],andar+1);
+      imprime(a->chave[i]);
+      imp(a->filho[i+1],andar+1, imprime);
     }
   }
 }
 
-void TARVBM_imprime(TARVBM *a){
-  imp(a, 0);
+void TARVBMG_imprime(TARVBMG *a, void(*imprime)(void*)){
+  imp(a, 0, imprime);
 }
 
+// Não usado em local algum
+// void imp0(TARVBMG *a, int andar){
+//   if(a){
+//     int i,j;
+//     for(i=0; i<=a->nchaves-1; i++){
+//       imp(a->filho[i],andar+1);
+//       for(j=0; j<=andar; j++) printf("\t");
+//       printf("%d\n", a->chave[i]);
+//     }
+//     imp(a->filho[i],andar+1);
+//   }
+// }
+//
+// void TARVBMG_imprime0(TARVBMG *a){
+//   imp0(a, 0);
+// }
 
-void imp0(TARVBM *a, int andar){
-  if(a){
-    int i,j;
-    for(i=0; i<=a->nchaves-1; i++){
-      imp(a->filho[i],andar+1);
-      for(j=0; j<=andar; j++) printf("\t");
-      printf("%d\n", a->chave[i]);
-    }
-    imp(a->filho[i],andar+1);
-  }
-}
-
-void TARVBM_imprime0(TARVBM *a){
-  imp0(a, 0);
-}
-
-TARVBM *divisao(TARVBM *x, int i, TARVBM* y, int t){
-  TARVBM *z = TARVBM_cria(t);
+TARVBMG *divisao(TARVBMG *x, int i, TARVBMG* y, int t) {
+  TARVBMG *z = TARVBMG_cria(t);
   z->folha = y->folha;
   int j;
   if(!y->folha){
@@ -114,37 +132,41 @@ TARVBM *divisao(TARVBM *x, int i, TARVBM* y, int t){
 }
 
 
-TARVBM *insere_nao_completo(TARVBM *x, int mat, int t){
+TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, bool (*menor_que)(void*, void*)) {
   int i = x->nchaves-1;
   if(x->folha){
-    while((i>=0) && (mat < x->chave[i])){
+    // while((i>=0) && (mat < x->chave[i])){
+    while((i>=0) && LT(data, x->chave[i])){
       x->chave[i+1] = x->chave[i];
       i--;
     }
-    x->chave[i+1] = mat;
+    // x->chave[i+1] = mat;
+    x->chave[i+1] = data;
     x->nchaves++;
     return x;
   }
-  while((i>=0) && (mat < x->chave[i])) i--;
+  // while((i>=0) && (mat < x->chave[i])) i--;
+  while((i>=0) && LT(data, x->chave[i])) i--;
   i++;
   if(x->filho[i]->nchaves == ((2*t)-1)){
     x = divisao(x, (i+1), x->filho[i], t);
-    if(mat > x->chave[i]) i++;
+    // if(mat > x->chave[i]) i++;
+    if(GT(data, x->chave[i])) i++;
   }
   x->filho[i] = insere_nao_completo(x->filho[i], mat, t);
   return x;
 }
 
-TARVBM *TARVBM_insere(TARVBM *T, int mat, int t){
-  if(TARVBM_busca(T, mat)) return T;
+TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t){
+  if(TARVBMG_busca(T, mat)) return T;
   if(!T){
-    T=TARVBM_cria(t);
+    T=TARVBMG_cria(t);
     T->chave[0] = mat;
     T->nchaves=1;
     return T;
   }
   if(T->nchaves == (2*t)-1){
-    TARVBM *S = TARVBM_cria(t);
+    TARVBMG *S = TARVBMG_cria(t);
     S->nchaves=0;
     S->folha = 0;
     S->filho[0] = T;
@@ -157,7 +179,7 @@ TARVBM *TARVBM_insere(TARVBM *T, int mat, int t){
 }
 
 
-TARVBM* remover(TARVBM* arv, int ch, int t){
+TARVBMG* remover(TARVBMG* arv, int ch, int t){
   if(!arv) return arv;
   int i;
   for(i = 0; i < arv->nchaves && arv->chave[i] < ch; i++);
@@ -167,14 +189,14 @@ TARVBM* remover(TARVBM* arv, int ch, int t){
     for(j=i; j<arv->nchaves-1;j++) arv->chave[j] = arv->chave[j+1];
     arv->nchaves--;
     if(!arv->nchaves){ //ultima revisao: 04/2020
-      TARVBM_libera(arv);
+      TARVBMG_libera(arv);
       arv = NULL;
     }
     return arv;
   }
 
   if((i < arv->nchaves) && (ch == arv->chave[i])) i++;
-  TARVBM *y = arv->filho[i], *z = NULL;
+  TARVBMG *y = arv->filho[i], *z = NULL;
   if (y->nchaves == t-1){ //CASOS 3A e 3B
     if((i < arv->nchaves) && (arv->filho[i+1]->nchaves >=t)){ //CASO 3A
       printf("\nCASO 3A: i menor que nchaves\n");
@@ -245,9 +267,9 @@ TARVBM* remover(TARVBM* arv, int ch, int t){
             y->filho[t+j] = z->filho[j];
             z->filho[j] = NULL; //ultima revisao: 04/2020
           }
-          //TARVBM_libera(z); 07/2024
+          //TARVBMG_libera(z); 07/2024
         }
-        TARVBM_libera(z); // 07/2024
+        TARVBMG_libera(z); // 07/2024
         for(j=i; j < arv->nchaves-1; j++){ //limpar referências de i
           arv->chave[j] = arv->chave[j+1];
           arv->filho[j+1] = arv->filho[j+2];
@@ -255,10 +277,10 @@ TARVBM* remover(TARVBM* arv, int ch, int t){
         arv->filho[arv->nchaves] = NULL;
         arv->nchaves--;
         if(!arv->nchaves){ //ultima revisao: 04/2020
-          TARVBM *temp = arv;
+          TARVBMG *temp = arv;
           arv = arv->filho[0];
           temp->filho[0] = NULL;
-          TARVBM_libera(temp);
+          TARVBMG_libera(temp);
         }
         arv = remover(arv, ch, t);
         return arv;
@@ -287,16 +309,16 @@ TARVBM* remover(TARVBM* arv, int ch, int t){
             z->filho[t+j] = y->filho[j];
             y->filho[j] = NULL; //ultima revisao: 04/2020
           }
-          //TARVBM_libera(y); 07/2024
+          //TARVBMG_libera(y); 07/2024
         }
-        TARVBM_libera(y); // 07/2024
+        TARVBMG_libera(y); // 07/2024
         arv->filho[arv->nchaves] = NULL;
         arv->nchaves--;
         if(!arv->nchaves){ //ultima revisao: 04/2020
-          TARVBM *temp = arv;
+          TARVBMG *temp = arv;
           arv = arv->filho[0];
           temp->filho[0] = NULL;
-          TARVBM_libera(temp);
+          TARVBMG_libera(temp);
           arv = remover(arv, ch, t);
         }
         else{
@@ -312,7 +334,7 @@ TARVBM* remover(TARVBM* arv, int ch, int t){
 }
 
 
-TARVBM* TARVBM_retira(TARVBM* arv, int k, int t){
-  if(!arv || !TARVBM_busca(arv, k)) return arv;
+TARVBMG* TARVBMG_retira(TARVBMG* arv, int k, int t){
+  if(!arv || !TARVBMG_busca(arv, k)) return arv;
   return remover(arv, k, t);
 }

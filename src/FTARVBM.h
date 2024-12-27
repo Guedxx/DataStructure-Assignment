@@ -5,17 +5,23 @@
 
 
 typedef struct arvbm{
-  int nchaves, folha, *chave;
+  int nchaves, folha;
+  void** chave;
   struct arvbm **filho, *prox;
-}TARVBM;
+}TARVBMG;
 
 
-TARVBM *TARVBM_cria(int t);
-TARVBM *TARVBM_inicializa(void);
-TARVBM *TARVBM_busca(TARVBM *a, int mat);
-TARVBM *TARVBM_insere(TARVBM *T, int mat, int t);
-TARVBM* TARVBM_retira(TARVBM* arv, int k, int t);
-void TARVBM_libera(TARVBM *a);
-void TARVBM_imprime(TARVBM *a);
-void TARVBM_imprime_chaves(TARVBM *a);
+TARVBMG* TARVBMG_cria(int t);
+TARVBMG* TARVBMG_inicializa();
+TARVBMG* TARVBMG_busca(TARVBMG *a, void* data, bool (*menor_que)(void*, void*));
+TARVBMG* TARVBMG_insere(TARVBMG *T, void* data, int t, bool (*menor_que)(void*, void*));
+TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*));
+void    TARVBMG_libera(TARVBMG *a);
+void    TARVBMG_imprime(TARVBMG *a, void(*imprime)(void*));
+void    TARVBMG_imprime_chaves(TARVBMG *a, void(*imprime)(void*));
+
+#define EQ(a, b) (!(menor_que((a), (b)) || menor_que((b), (a))))
+#define NEQ(a, b) (menor_que((a), (b)) || menor_que((b), (a)))
+#define GT(a, b) (menor_que((b), (a)))
+#define LT(a, b) (menor_que((a), (b)))
 
