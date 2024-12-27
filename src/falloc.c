@@ -13,7 +13,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define FILE_SIZE (1024 * 4) // 4 KB
+#define FILE_SIZE     (1024 * 4) // 4 KB (1 page)
 #define FIXED_ADDRESS ((void*)0x40000000)
 
 typedef struct block_header {
@@ -66,10 +66,9 @@ void* falloc(const size_t size) {
     while (current < falloc_ctx.base_addr + falloc_ctx.total_size) {
         BlockHeader* header = current;
         if (header->is_free && header->size >= size) {
-            // Allocate block
             header->is_free = false;
 
-            // Split block if necessary
+            // dividir o bloco em dois se o tamanho for maior que o requisitado
             if (header->size > size + sizeof(BlockHeader)) {
                 BlockHeader* next = (BlockHeader*)((char*)current + sizeof(BlockHeader) + size);
                 next->size = header->size - size - sizeof(BlockHeader);
@@ -83,7 +82,7 @@ void* falloc(const size_t size) {
         current = (char*)current + sizeof(BlockHeader) + header->size;
     }
 
-    // expand file
+    // allocar mais memória no arquivo
     size_t new_size = falloc_ctx.total_size + FILE_SIZE;
     if (ftruncate(falloc_ctx.fd, (long) new_size) == -1) {
         perror("ftruncate failed");
@@ -120,6 +119,13 @@ void falloc_free(void* ptr) {
 
     BlockHeader* header = (BlockHeader*)((char*)ptr - sizeof(BlockHeader));
     header->is_free = true;
+
+    BlockHeader* next = (BlockHeader*)((char*)header + sizeof(BlockHeader) + header->size);
+    while (next < falloc_ctx.base_addr + falloc_ctx.total_size && next->is_free) {
+        header->size += next->size + sizeof(BlockHeader);
+
+        next = (BlockHeader*)((char*)next + sizeof(BlockHeader) + next->size);
+    }
 }
 
 void falloc_free_all() {

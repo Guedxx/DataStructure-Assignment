@@ -13,7 +13,7 @@ TARVBM *TARVBM_cria(int t){
 }
 
 
-TARVBM *TARVBM_inicializa(void){
+TARVBM *TARVBM_inicializa(void) {
   return NULL;
 }
 
