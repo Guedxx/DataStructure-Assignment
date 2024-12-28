@@ -5,13 +5,13 @@
 #include "TARVBMG.c"
 
 // String functions -=-
-bool BPT_STR_menor_que(void* a, void* b){
+bool BPT_STR_menor_que(const void* a, const void* b){
   return strcmp(a, b) < 0;
 }
 void BPT_STR_imprime_chave(void* a){
   printf("%s ", (char*)a);
 }
-void BPT_STR_imprime_chave_json(void* a, char* buffer) {
+void BPT_STR_imprime_chave_json(const void* a, char* buffer) {
   strcat(buffer, "\"");
   strcat(buffer, a);
   strcat(buffer, "\"");

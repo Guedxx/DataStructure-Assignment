@@ -346,6 +346,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*
   return arv;
 }
 
+// minhas alterações 28/12/2024
 
 TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*)) {
   //if(!arv || !TARVBMG_busca(arv, k)) return arv;
@@ -387,4 +388,35 @@ void TARVBMG_json(TARVBMG* a, char* buffer, void(*imprime)(void*, char*)) {
   else {
     strcat(buffer, "}");
   }
+}
+
+// Executa uma função em todos os elementos da árvore
+void TARVBMG_map(TARVBMG* a, void(*map)(void*)) {
+  if (!a) return;
+
+  if (!a->folha) {
+    for (int i = 0; i <= a->nchaves; i++) {
+      TARVBMG_map(a->filhos[i], map);
+    }
+  }
+  else {
+    for (int i = 0; i < a->nchaves; i++) {
+      map(a->chaves[i]);
+    }
+  }
+}
+
+// Busca o primeiro elemento maior ou igual a data
+TARVBMG* TARVBMG_busca_maior(TARVBMG* a, void* data, bool (*menor_que)(void*, void*)) {
+  // todo: not working
+  if (!a) return NULL;
+  int i = 0;
+
+  if (a->folha) return a;
+
+  while (i < a->nchaves && LT(data, a->chaves[i])) i++;
+
+  // if (i < a->nchaves && EQ(data, a->chaves[i])) return a;
+
+  return TARVBMG_busca_maior(a->filhos[i], data, menor_que);
 }

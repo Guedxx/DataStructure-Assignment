@@ -33,13 +33,13 @@ BPT_INT* BPT_INT_busca(BPT_INT* a, int data) {
   return TARVBMG_busca(a, &data, BPT_INT_menor_que);
 }
 
-BPT_INT* BPT_INT_insere(BPT_INT* T, int data, int t) {
+BPT_INT* BPT_INT_insere(BPT_INT* T, const int data, const int t) {
   int* data_ptr = falloc(sizeof(int));
   *data_ptr = data;
   return TARVBMG_insere(T, data_ptr, t, BPT_INT_menor_que);
 }
 
-BPT_INT* BPT_INT_retira(BPT_INT* arv, int data, int t){
+BPT_INT* BPT_INT_retira(BPT_INT* arv, int data, const int t){
   return TARVBMG_retira(arv, &data, t, BPT_INT_menor_que);
 }
 
@@ -47,7 +47,7 @@ void BPT_INT_libera(BPT_INT *a){
   TARVBMG_libera(a);
 }
 
-void BPT_INT_imprime(const BPT_INT *a){
+void BPT_INT_imprime(const BPT_INT *a) {
   TARVBMG_imprime(a, BPT_INT_imprime_chave);
 }
 
@@ -59,24 +59,31 @@ void BPT_INT_json(BPT_INT* a, char* buffer){
   TARVBMG_json(a, buffer, BPT_INT_imprime_chave_json);
 }
 
+BPT_INT* BPT_INT_busca_maior(BPT_INT* a, int data) {
+  return TARVBMG_busca_maior(a, &data, BPT_INT_menor_que);
+}
+
 
 // Testes
 int main() {
   falloc_start("BPT_INT_test.bin");
   BPT_INT *a = BPT_INT_inicializa();
 
-  for (int i = 0; i < 8; i += 1) {
+  for (int i = 1; i < 11; i += 1) {
       a = BPT_INT_insere(a, i, 2);
   }
 
-  BPT_INT_imprime(a);
-  // BPT_INT_libera(a);
+  BPT_INT* b = BPT_INT_busca_maior(a, 5); // (*((int**)(b->chaves)))[1]
 
-  printf("Jason: \n");
-  char buffer[10000];
-  for (int i = 0; i < 10000; i++) buffer[i] = 0;
-  BPT_INT_json(a, buffer);
-  printf("%s\n", buffer);
+
+  BPT_INT_imprime(a);
+  BPT_INT_libera(a);
+
+  // printf("Jason: \n");
+  // char buffer[10000];
+  // for (int i = 0; i < 10000; i++) buffer[i] = 0;
+  // BPT_INT_json(a, buffer);
+  // printf("%s\n", buffer);
 
   printf("Arvore adr: %p\n", a);
 
