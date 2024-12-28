@@ -11,6 +11,11 @@ bool BPT_INT_menor_que(void* a, void* b){
 void BPT_INT_imprime_chave(void* a){
   printf("%d ", *(int*)a);
 }
+void BPT_INT_imprime_chave_json(void* a, char* buffer) {
+  char buffer2[20];
+  sprintf(buffer2, "%d", *(int*)a);
+  strcat(buffer, buffer2);
+}
 // Int functions -=-
 
 // Pois BPT_INT herda de TARVBMG. kkkkk
@@ -50,6 +55,10 @@ void BPT_INT_imprime_chaves(BPT_INT *a){
   TARVBMG_imprime_chaves(a, BPT_INT_imprime_chave);
 }
 
+void BPT_INT_json(BPT_INT* a, char* buffer){
+  TARVBMG_json(a, buffer, BPT_INT_imprime_chave_json);
+}
+
 
 // Testes
 // int main() {
@@ -75,6 +84,12 @@ int main() {
     BPT_INT *a = (TARVBMG*) 0x40001388;
 
     BPT_INT_imprime(a);
+
+    printf("Jason: \n");
+    char buffer[10000];
+    for (int i = 0; i < 10000; i++) buffer[i] = 0;
+    BPT_INT_json(a, buffer);
+    printf("%s\n", buffer);
 
     falloc_end();
     return 0;

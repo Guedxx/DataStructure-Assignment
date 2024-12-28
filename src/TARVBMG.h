@@ -6,8 +6,8 @@
 
 typedef struct arvbm{
   int nchaves, folha;
-  void** chave;
-  struct arvbm **filho, *prox;
+  void** chaves;
+  struct arvbm **filhos, *prox;
 }TARVBMG;
 
 
@@ -19,6 +19,9 @@ TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*
 void    TARVBMG_libera(TARVBMG *a);
 void    TARVBMG_imprime(const TARVBMG *a, void(*imprime)(void*));
 void    TARVBMG_imprime_chaves(TARVBMG *a, void(*imprime)(void*));
+
+// mede by nathan 27/12/24
+void TARVBMG_json(TARVBMG* a, char* buffer, void(*imprime)(void*, char*));
 
 #define EQ(a, b) (!(menor_que((a), (b)) || menor_que((b), (a))))
 #define NEQ(a, b) (menor_que((a), (b)) || menor_que((b), (a)))
