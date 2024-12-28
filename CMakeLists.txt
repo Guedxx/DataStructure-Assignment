@@ -7,4 +7,5 @@ add_executable(DataStructure
         src/TARVBMG.c
         src/testes.c
         src/BPT_INT.c
+        src/BPT_STR.c
 )

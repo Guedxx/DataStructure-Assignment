@@ -61,36 +61,42 @@ void BPT_INT_json(BPT_INT* a, char* buffer){
 
 
 // Testes
-// int main() {
-//   falloc_start("BPT_INT_test.bin");
-//   BPT_INT *a = BPT_INT_inicializa();
-//
-//   for (int i = 0; i < 11; i += 1) {
-//       a = BPT_INT_insere(a, i, 2);
-//   }
-//
-//   BPT_INT_imprime(a);
-//   // BPT_INT_libera(a);
-//
-//   printf("Arvore adr: %p\n", a);
-//
-//   falloc_end();
-//   return 0;
-// }
+int main() {
+  falloc_start("BPT_INT_test.bin");
+  BPT_INT *a = BPT_INT_inicializa();
+
+  for (int i = 0; i < 8; i += 1) {
+      a = BPT_INT_insere(a, i, 2);
+  }
+
+  BPT_INT_imprime(a);
+  // BPT_INT_libera(a);
+
+  printf("Jason: \n");
+  char buffer[10000];
+  for (int i = 0; i < 10000; i++) buffer[i] = 0;
+  BPT_INT_json(a, buffer);
+  printf("%s\n", buffer);
+
+  printf("Arvore adr: %p\n", a);
+
+  falloc_end();
+  return 0;
+}
 
 // Testes
-int main() {
-    falloc_start("BPT_INT_test.bin");
-    BPT_INT *a = (TARVBMG*) 0x40001388;
-
-    BPT_INT_imprime(a);
-
-    printf("Jason: \n");
-    char buffer[10000];
-    for (int i = 0; i < 10000; i++) buffer[i] = 0;
-    BPT_INT_json(a, buffer);
-    printf("%s\n", buffer);
-
-    falloc_end();
-    return 0;
-}
+// int main() {
+//     falloc_start("BPT_INT_test.bin");
+//     BPT_INT *a = (TARVBMG*) 0x40001388;
+//
+//     BPT_INT_imprime(a);
+//
+//     printf("Jason: \n");
+//     char buffer[10000];
+//     for (int i = 0; i < 10000; i++) buffer[i] = 0;
+//     BPT_INT_json(a, buffer);
+//     printf("%s\n", buffer);
+//
+//     falloc_end();
+//     return 0;
+// }

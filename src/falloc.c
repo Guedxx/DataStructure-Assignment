@@ -151,6 +151,26 @@ void* falloc_realloc(void* ptr, size_t size) {
     return new_ptr;
 }
 
+uint32_t falloc_allocated_size() {
+    void* current = falloc_ctx.base_addr;
+    uint32_t total = 0;
+    while (current < falloc_ctx.base_addr + falloc_ctx.total_size) {
+        BlockHeader* header = current;
+        if (!header->is_free) {
+            total += header->size;
+        }
+
+        current = (char*)current + sizeof(BlockHeader) + header->size;
+    }
+
+    return total;
+}
+uint32_t falloc_free_size() {
+    const uint32_t allocated = falloc_allocated_size();
+    return falloc_ctx.total_size - allocated;
+}
+
+
 
 // write test
 // int main() {
