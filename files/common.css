@@ -1,0 +1,162 @@
+@keyframes animateBackground {
+    0% { background-position: -140px 0; }
+    50% { background-position: -50px 0; }
+    100% { background-position: -140px 0; }
+}
+
+/* ---------------------- */
+
+body {
+    background: url("https://cellsatwork-anime.com/assets/img/common/header_pc.jpg") no-repeat top left;
+    background-size: auto 100vh;
+    animation: animateBackground 25s linear infinite;
+    font-family: YakuHanJP, 'Noto Sans JP','Helvetica Neue', YuGothic, Hiragino Kaku Gothic ProN, Arial, Meiryo, sans-serif;
+    color: #ED1C24;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ED1C24;
+    color: white;
+    text-align: center;
+    padding: 5px 15px 5px 5px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 40px;
+    z-index: 100;
+}
+
+header img {
+    border-radius: 50%;
+    object-fit: cover;
+    padding: 10px;
+}
+.login {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+header a {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: white;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    font-size: 1.5em;
+    position: fixed;
+    left: 300px;
+    top: 40px;
+    width: calc(100vw - 300px);
+    height: calc(100vh - 40px);
+    background: linear-gradient(to right, rgba(255, 255, 255, 98%), rgba(255, 255, 255, 1));
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+/* Imóvel entrada */
+.imovel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(237, 28, 36, 0.15);
+    height: 95%;
+    margin: 30px 15px 15px 15px;
+    padding: 5px;
+    border-radius: 10px;
+    overflow-y: scroll;
+}
+
+.imovel h2 {
+    text-align: center;
+    font-size: 1.2em;
+}
+.imovel p {
+    text-align: center;
+}
+
+button {
+    background-color: white;
+    color: #ED1C24;
+    border-color: #f0f0f0;
+    border-radius: 5px;
+    font-size: 1em;
+    padding: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+button:hover {
+    background-color: #f0f0f0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 5px;
+}
+
+.form-group input {
+    margin-left: 15px;
+    border-radius: 5px;
+    border: 1px solid #f0f0f0;
+    background-color: rgba(237, 28, 36, 0.15);
+    color: #ED1C24;
+}
+.form-group textarea {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(237, 28, 36, 0.15);
+    color: #ED1C24;
+    outline: 1px solid #ED1C24;
+    border-color: #ED1C24;
+}
+
+input:focus, textarea:focus {
+    outline: 1.5px solid #ED1C24;
+    border-color: #ED1C24;
+}
+
+.cadastrar-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+
+
+
+
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 2px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(237, 28, 36, 0.65);
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #ED1C24;
+}

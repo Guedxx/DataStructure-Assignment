@@ -8,9 +8,19 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-
 #include <pthread.h>
 
+#include "TImoveis.c"
+
+
+#define ADD_POST(url, callback) if (strcmp((url), request_url) == 0) { \
+    char* json = find_json(strtok_r_buf); \
+    if (json == NULL) { \
+        write(client_socket, "HTTP/1.1 400 Bad Request", 24); \
+        return; \
+    } \
+    callback(json); \
+}
 
 // /run/media/nathan/Acer/Users/miche/Videos/Series e Filmes
 //char* base_file_path = "/run/media/nathan/Acer/Users/miche/Videos/Series e Filmes/%s";
@@ -33,12 +43,10 @@ void format_file_path(char *path) {
     }
 }
 
-
 void send_file(const int client_socket, char *filename, const char *content_type) {
     char path[1024];
     format_file_path(filename);
     sprintf(path, base_file_path, filename);
-    printf(path);
     FILE *file = fopen(path, "r");
     if (file == NULL) {
         // Arquivo não encontrado
@@ -64,36 +72,62 @@ void send_file(const int client_socket, char *filename, const char *content_type
     fclose(file);
 }
 
-void handle_request(int client_socket) {
+void send_json(const int client_socket, const char *json) {
+    const char *header = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n";
+    write(client_socket, header, strlen(header));
+    write(client_socket, json, strlen(json));
+}
+
+char* find_json(const char* json) {
+    char* start = strchr(json, '{');
+    if (start == NULL) return NULL;
+
+    char* end = strrchr(json, '}');
+    if (end == NULL) return NULL;
+
+    end[1] = '\0';
+    return start;
+}
+
+void handle_request(const int client_socket) {
     char buffer[4096];
     const int n = read(client_socket, buffer, sizeof(buffer) - 1);
     if (n <= 0) return;
     buffer[n] = '\0';
 
+    // Usando write no lugar de printf para evitar problemas com concorrência
     write(STDOUT_FILENO, "Requisição recebida:\n", 21);
     write(STDOUT_FILENO, buffer, n);
 
-    // printf("Requisição recebida:\n%s\n", buffer);
 
+    char* strtok_r_buf;
     // Checar se é GET ou POST
     if (strncmp(buffer, "GET", 3) == 0) {
         // Tratar requisição GET
         if (strstr(buffer, "GET / ") != NULL) {
-            send_file(client_socket, "index.html", "text/html");
+            send_file(client_socket, "home.html", "text/html");
+        }
+        // css
+        else if (strstr(buffer, ".css ") != NULL) {
+            char *filename = strtok_r(buffer + 5, " ", &strtok_r_buf);
+            send_file(client_socket, filename, "text/css");
         }
         else {
-            char *filename = strtok(buffer + 5, " ");
+            char *filename = strtok_r(buffer + 5, " ", &strtok_r_buf);
             send_file(client_socket, filename, "text/plain");
         }
-    } else if (strncmp(buffer, "POST", 4) == 0) {
-        // Tratar requisição POST
-        // Lógica para lidar com dados de um POST (ex: processar formulários)
-        const char *response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nPOST request received!";
-        write(client_socket, response, strlen(response));
-    } else {
-        // Método não suportado
-        const char *error_message = "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n405 - Method Not Allowed\n";
-        write(client_socket, error_message, strlen(error_message));
+    }
+
+    else if (strncmp(buffer, "POST", 4) == 0) {
+        const char* request_url = strtok_r(buffer + 5, " ", &strtok_r_buf);
+
+        ADD_POST("/submit_imovel", test_imovel)
+
+        write(client_socket, "HTTP/1.1 200 OK", 15);
+    }
+
+    else {
+        write(client_socket, "HTTP/1.1 405 Method Not Allowed", 31);
     }
 }
 
@@ -140,7 +174,7 @@ int main(const int argc, char *argv[]) {
         const int client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_len);
 
         if (client_socket == -1) {
-            perror("accept");
+            perror("Cannot accept connection");
             continue;
         }
 

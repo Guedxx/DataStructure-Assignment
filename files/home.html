@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Diversão com células</title>
+    <link href="/common.css" rel="stylesheet">
+    <link rel="icon" href="/Platlet_0.png" type="image/png">
+</head>
+<body>
+    <header>
+        <a href="/">
+            Células imobiliárias
+        </a>
+
+        <div class="login">
+            <span id="UserName">
+                Isabel Cristina Mello Rosseti
+            </span>
+            <img src="/rosseti.jpg" alt="Imagen da rosset">
+        </div>
+    </header>
+
+    <main id="main">
+
+        <div class="imovel">
+            <h2>Cadastro de Imóvel</h2>
+            <form id="imovelForm">
+                <div class="form-group">
+                    <label for="id">ID:</label>
+                    <input type="number" id="id" name="id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="bairro">Bairro:</label>
+                    <input type="text" id="bairro" name="bairro" maxlength="50" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo:</label>
+                    <input type="text" id="tipo" name="tipo" maxlength="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rua">Rua:</label>
+                    <input type="text" id="rua" name="rua" maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="numero">Número:</label>
+                    <input type="number" id="numero" name="numero" placeholder="-1 se não informado">
+                </div>
+
+                <div class="form-group">
+                    <label for="precoTotal">Preço Total:</label>
+                    <input type="number" id="precoTotal" name="precoTotal" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="precoMetroQ">Preço por Metro Quadrado:</label>
+                    <input type="number" id="precoMetroQ" name="precoMetroQ" step="0.01" required>
+                </div>
+
+                <div class="form-group-drescricao">
+                    <label for="descricao">Descrição:</label><br>
+                    <textarea id="descricao" name="descricao" maxlength="3867" rows="10" cols="50"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="cep">CEP:</label>
+                    <input type="text" id="cep" name="cep" maxlength="9" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="latitude">Latitude:</label>
+                    <input type="number" id="latitude" name="latitude" step="0.000001" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="longitude">Longitude:</label>
+                    <input type="number" id="longitude" name="longitude" step="0.000001" required>
+                </div>
+
+                <div class="cadastrar-btn">
+                    <button type="button" id="submitButton">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function() {
+            const form = document.getElementById('imovelForm');
+            const formData = new FormData(form);
+            const jsonData = {};
+
+            formData.forEach((value, key) => {
+                jsonData[key] = key === 'precoMetroQ' || key === 'precoTotal' || key === 'latitude' || key === 'longitude' ? parseFloat(value) :
+                    key === 'id' || key === 'numero' ? parseInt(value) : value;
+            });
+
+            fetch('/submit_imovel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Imóvel cadastrado com sucesso!');
+                } else {
+                    alert('Erro ao cadastrar imóvel.');
+                }
+            }).catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao enviar os dados.');
+            });
+        });
+    </script>
+</body>
+</html>

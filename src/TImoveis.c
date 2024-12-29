@@ -86,24 +86,48 @@ void Imovel_from_string(Imovel* imovel, char* str){
     imovel->longitude = atof(token);
 }
 
+void Imovel_to_json(Imovel* imovel, char* json) {
+    sprintf(json, "{\"id\": %u, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %d, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imovel->id, imovel->bairro, imovel->tipo, imovel->rua, imovel->numero, imovel->precoTotal, imovel->precoMetroQ, imovel->descricao, imovel->cep, imovel->latitude, imovel->longitude);
+}
+
+void Imovel_from_json(Imovel* imovel, const char* json) {
+    sscanf(json, "{\"id\": %u, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %d, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
+}
+
+void test_imovel(const char* json) {
+    Imovel imovel;
+    Imovel_from_json(&imovel, json);
+    Imovel_print(&imovel);
+}
 
 // teste
-int main() {
-    const int fd = open("TC_EDA_out.csv", O_RDONLY);
-    if (fd == -1) {
-        perror("open");
-        return 1;
-    }
-    size_t size = lseek(fd, 0, SEEK_END);
-    char* data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-
-    char* save;
-    for (char* token = strtok_r(data, "\n", &save); token != NULL; token = strtok_r(NULL, "\n", &save) ) {
-        Imovel imovel;
-        Imovel_from_string(&imovel, token);
-        Imovel_print(&imovel);
-    }
-
-    munmap(data, size);
-}
+// int main() {
+//     const int fd = open("TC_EDA_out.csv", O_RDONLY);
+//     if (fd == -1) {
+//         perror("open");
+//         return 1;
+//     }
+//     size_t size = lseek(fd, 0, SEEK_END);
+//     char* data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+//
+//     char* save;
+//     for (char* token = strtok_r(data, "\n", &save); token != NULL; token = strtok_r(NULL, "\n", &save) ) {
+//         Imovel imovel;
+//         Imovel_from_string(&imovel, token);
+//         printf("Original:\n");
+//         Imovel_print(&imovel);
+//         printf("\n JSON:\n");
+//         char json[4096];
+//         Imovel_to_json(&imovel, json);
+//         printf("%s\n", json);
+//         printf("\n");
+//         printf("From JSON:\n");
+//         Imovel imovel2;
+//         Imovel_from_json(&imovel2, json);
+//         Imovel_print(&imovel2);
+//         printf("\n\n");
+//     }
+//
+//     munmap(data, size);
+// }
 

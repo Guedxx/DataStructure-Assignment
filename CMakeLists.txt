@@ -8,4 +8,6 @@ add_executable(DataStructure
         src/testes.c
         src/BPT_INT.c
         src/BPT_STR.c
+        src/WebServer.c
+        src/HashMap.c
 )
