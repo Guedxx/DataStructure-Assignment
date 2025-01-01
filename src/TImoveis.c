@@ -2,10 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/mman.h>
-
 
 typedef struct {
     u_int32_t id;                           // ID único do imóvel

@@ -2,9 +2,10 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Diversão com células</title>
+    <title>Células imobiliárias</title>
     <link href="/common.css" rel="stylesheet">
     <link rel="icon" href="/Platlet_0.png" type="image/png">
+    <script src="/script.js"></script>
 </head>
 <body>
     <header>
@@ -22,7 +23,7 @@
 
     <main id="main">
 
-        <div class="imovel">
+        <div class="imovel main-divs">
             <h2>Cadastro de Imóvel</h2>
             <form id="imovelForm">
                 <div class="form-group">
@@ -80,43 +81,82 @@
                     <input type="number" id="longitude" name="longitude" step="0.000001" required>
                 </div>
 
-                <div class="cadastrar-btn">
-                    <button type="button" id="submitButton">Cadastrar</button>
+                <div class="center-btn-div">
+                    <button type="button" id="submitButton" onclick="cadastrar()">Cadastrar</button>
                 </div>
             </form>
         </div>
 
+        <div class="admin-controls main-divs">
+            <h2>Buscar Imóveis</h2>
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="id">ID:</label>
+                    <input type="number" id="id_s" name="id">
+                </div>
+
+                <div class="form-group">
+                    <label for="bairro">Bairro:</label>
+                    <input type="text" id="bairro_s" name="bairro">
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo:</label>
+                    <input type="text" id="tipo_s" name="tipo">
+                </div>
+
+                <div class="form-group-0">
+                    <div class="form-group-2">
+                        <label for="precoMin">Preço Mínimo:</label>
+                        <input type="number" id="precoMin" name="precoMin">
+                    </div>
+                    <div class="form-group-2">
+                        <label for="precoMax">Preço Máximo:</label>
+                        <input type="number" id="precoMax" name="precoMax">
+                    </div>
+                </div>
+
+                <div class="form-group-0">
+                    <div class="form-group-2">
+                        <label for="areaMin">Área Mínima:</label>
+                        <input type="number" id="areaMin" name="areaMin">
+                    </div>
+                    <div class="form-group-2">
+                        <label for="areaMax">Área Máxima:</label>
+                        <input type="number" id="areaMax" name="areaMax">
+                    </div>
+                </div>
+
+                <div class="center-btn-div">
+                    <button type="button" id="searchButton">Buscar</button>
+                </div>
+            </form>
+
+            <div class="search-results">
+                <h2>Resultados da Busca</h2>
+                <div id="results">
+                    <template id="imovel-template">
+                        <div class="imovel-card">
+                            <h3>Detalhes do Imóvel</h3>
+                            <p><strong>ID:</strong> <span class="imovel-id"></span></p>
+                            <p><strong>Bairro:</strong> <span class="imovel-bairro"></span></p>
+                            <p><strong>Tipo:</strong> <span class="imovel-tipo"></span></p>
+                            <p><strong>Rua:</strong> <span class="imovel-rua"></span></p>
+                            <p><strong>Número:</strong> <span class="imovel-numero"></span></p>
+                            <p><strong>Preço Total:</strong> <span class="imovel-precoTotal"></span></p>
+                            <p><strong>Preço por Metro Quadrado:</strong> <span class="imovel-precoMetroQ"></span></p>
+                            <p><strong>Descrição:</strong></p>
+                            <p class="imovel-descricao"></p>
+                            <p><strong>CEP:</strong> <span class="imovel-cep"></span></p>
+                            <p><strong>Latitude:</strong> <span class="imovel-latitude"></span></p>
+                            <p><strong>Longitude:</strong> <span class="imovel-longitude"></span></p>
+                        </div>
+                    </template>
+                </div>
+                <button id="deleteAllButton" style="display:none;">Apagar Todos</button>
+            </div>
+        </div>
+
     </main>
-
-
-    <script>
-        document.getElementById('submitButton').addEventListener('click', function() {
-            const form = document.getElementById('imovelForm');
-            const formData = new FormData(form);
-            const jsonData = {};
-
-            formData.forEach((value, key) => {
-                jsonData[key] = key === 'precoMetroQ' || key === 'precoTotal' || key === 'latitude' || key === 'longitude' ? parseFloat(value) :
-                    key === 'id' || key === 'numero' ? parseInt(value) : value;
-            });
-
-            fetch('/submit_imovel', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(jsonData)
-            }).then(response => {
-                if (response.ok) {
-                    alert('Imóvel cadastrado com sucesso!');
-                } else {
-                    alert('Erro ao cadastrar imóvel.');
-                }
-            }).catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao enviar os dados.');
-            });
-        });
-    </script>
 </body>
 </html>

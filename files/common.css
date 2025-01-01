@@ -60,6 +60,7 @@ main {
     left: 300px;
     top: 40px;
     width: calc(100vw - 300px);
+    /*width: max-content;*/
     height: calc(100vh - 40px);
     background: linear-gradient(to right, rgba(255, 255, 255, 98%), rgba(255, 255, 255, 1));
     overflow-x: scroll;
@@ -67,25 +68,34 @@ main {
 }
 
 /* Imóvel entrada */
-.imovel {
+.main-divs {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     background-color: rgba(237, 28, 36, 0.15);
     height: 95%;
+    /*width: 48%;*/
+    width: max-content;
     margin: 30px 15px 15px 15px;
     padding: 5px;
     border-radius: 10px;
+
+
+    flex: none;
+    box-sizing: border-box;
+    scrollbar-gutter: stable;
     overflow-y: scroll;
+    /*overflow-x: auto;*/
 }
 
-.imovel h2 {
+.main-divs h2 {
     text-align: center;
     font-size: 1.2em;
 }
-.imovel p {
-    text-align: center;
+.main-divs label {
+    width: max-content;
+    height: min-content;
 }
 
 button {
@@ -109,12 +119,35 @@ button:hover {
     margin: 5px;
 }
 
+.form-group-0 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 95%;
+    margin: 15px;
+}
+
+.form-group-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
 .form-group input {
     margin-left: 15px;
     border-radius: 5px;
     border: 1px solid #f0f0f0;
     background-color: rgba(237, 28, 36, 0.15);
     color: #ED1C24;
+}
+.form-group-2 input {
+    margin-left: 15px;
+    border-radius: 5px;
+    border: 1px solid #f0f0f0;
+    background-color: rgba(237, 28, 36, 0.15);
+    color: #ED1C24;
+    height: 2em;
 }
 .form-group textarea {
     padding: 5px;
@@ -125,18 +158,23 @@ button:hover {
     border-color: #ED1C24;
 }
 
+.form-group-drescricao {
+    margin: 15px;
+}
+
 input:focus, textarea:focus {
     outline: 1.5px solid #ED1C24;
     border-color: #ED1C24;
 }
 
-.cadastrar-btn {
+.center-btn-div {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     margin: 5px;
 }
+
 
 
 
