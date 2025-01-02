@@ -60,6 +60,6 @@ void BPT_DUB_json(BPT_DUB* a, char* buffer){
 }
 
 BPT_DUB* BPT_DUB_busca_maior(BPT_DUB* a, double data) {
-  return TARVBMG_busca_maior(a, &data, BPT_DUB_menor_que);
+  return TARVBMG_busca_maior_que(a, &data, BPT_DUB_menor_que);
 }
 

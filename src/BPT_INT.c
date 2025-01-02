@@ -60,46 +60,56 @@ void BPT_INT_json(BPT_INT* a, char* buffer){
 }
 
 BPT_INT* BPT_INT_busca_maior(BPT_INT* a, int data) {
-  return TARVBMG_busca_maior(a, &data, BPT_INT_menor_que);
+  return TARVBMG_busca_maior_que(a, &data, BPT_INT_menor_que);
 }
 
 
-// Testes
-// int main() {
-//   falloc_start("BPT_INT_test.bin");
-//   BPT_INT *a = BPT_INT_inicializa();
-//
-//   for (int i = 1; i < 11; i += 1) {
-//       a = BPT_INT_insere(a, i, 2);
-//   }
-//
-//   //BPT_INT* b = BPT_INT_busca_maior(a, 5); // (*((int**)(b->chaves)))[1]
-//
-//   BPT_INT_imprime(a);
-//
-//   printf("Adding 5\n");
-//   a = BPT_INT_insere(a, 5, 2);
-//   BPT_INT_imprime(a);
-//
-//   printf("Adding 5\n");
-//   a = BPT_INT_insere(a, 5, 2);
-//   BPT_INT_imprime(a);
-//
-//
-//   BPT_INT_imprime(a);
-//   BPT_INT_libera(a);
-//
-//   // printf("Jason: \n");
-//   // char buffer[10000];
-//   // for (int i = 0; i < 10000; i++) buffer[i] = 0;
-//   // BPT_INT_json(a, buffer);
-//   // printf("%s\n", buffer);
-//
-//   printf("Arvore adr: %p\n", a);
-//
-//   falloc_end();
-//   return 0;
-// }
+//Testes
+int main() {
+  falloc_start("BPT_INT_test.bin");
+  BPT_INT *a = BPT_INT_inicializa();
+
+  for (int i = 1; i < 11; i += 1) {
+      a = BPT_INT_insere(a, i, 2);
+  }
+
+  a = BPT_INT_insere(a, -7, 2);
+  a = BPT_INT_insere(a, -10, 2);
+
+  BPT_INT* b = BPT_INT_busca_maior(a, 5); // (*((int**)(b->chaves)))[1]
+  printf("Maior que 5: %d\n", (*((int**)(b->chaves))[0]));
+
+  BPT_INT_imprime(a);
+
+  const BPT_INT* menor = TARVBMG_busca_menor(a);
+  printf("Menor: %d\n", (*((int**)(menor->chaves))[0]));
+
+  const BPT_INT* maior = TARVBMG_busca_maior(a);
+  printf("Maior: %d\n", (*((int**)(maior->chaves))[maior->nchaves - 1]));
+
+  printf("Adding 5\n");
+  a = BPT_INT_insere(a, 5, 2);
+  BPT_INT_imprime(a);
+
+  printf("Adding 5\n");
+  a = BPT_INT_insere(a, 5, 2);
+  BPT_INT_imprime(a);
+
+
+  BPT_INT_imprime(a);
+  BPT_INT_libera(a);
+
+  // printf("Jason: \n");
+  // char buffer[10000];
+  // for (int i = 0; i < 10000; i++) buffer[i] = 0;
+  // BPT_INT_json(a, buffer);
+  // printf("%s\n", buffer);
+
+  printf("Arvore adr: %p\n", a);
+
+  falloc_end();
+  return 0;
+}
 
 // Testes
 // int main() {

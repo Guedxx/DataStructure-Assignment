@@ -1,7 +1,5 @@
+#pragma once
 #include "falloc.c"
-#include <stdio.h>
-#include <stdlib.h>
-
 
 
 typedef struct arvbm{

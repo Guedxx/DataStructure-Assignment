@@ -158,7 +158,7 @@ TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, bool (*menor_que)(vo
 // data tem que ser alocado dinamicamente
 TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, bool (*menor_que)(void*, void*)) {
   // if(TARVBMG_busca(T, mat)) return T;
-  //if(TARVBMG_busca(T, data, menor_que)) return T;
+  //if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
 
   if(!T){
     T=TARVBMG_cria(t);
@@ -346,8 +346,6 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*
   return arv;
 }
 
-// minhas alterações 28/12/2024
-
 TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*)) {
   //if(!arv || !TARVBMG_busca(arv, k)) return arv;
   if(!arv || !TARVBMG_busca(arv, data, menor_que)) return arv;
@@ -355,6 +353,7 @@ TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*
   return remover(arv, data, t, menor_que);
 }
 
+// minhas alterações 28/12/2024
 
 void TARVBMG_json(TARVBMG* a, char* buffer, void(*imprime)(void*, char*)) {
   if (!a) {
@@ -390,33 +389,43 @@ void TARVBMG_json(TARVBMG* a, char* buffer, void(*imprime)(void*, char*)) {
   }
 }
 
+TARVBMG* TARVBMG_busca_menor(TARVBMG* a) {
+  if (!a) return NULL;
+
+  while (!a->folha) a = a->filhos[0];
+  return a;
+}
+TARVBMG* TARVBMG_busca_maior(TARVBMG* a) {
+  if (!a) return NULL;
+
+  while (!a->folha) a = a->filhos[a->nchaves];
+  return a;
+}
+
+
 // Executa uma função em todos os elementos da árvore
 void TARVBMG_map(TARVBMG* a, void(*map)(void*)) {
   if (!a) return;
 
-  if (!a->folha) {
-    for (int i = 0; i <= a->nchaves; i++) {
-      TARVBMG_map(a->filhos[i], map);
+  TARVBMG* menor = TARVBMG_busca_menor(a);
+
+  TARVBMG* p = menor;
+
+  while (p) {
+    for (int i = 0; i < p->nchaves; i++) {
+      map(p->chaves[i]);
     }
-  }
-  else {
-    for (int i = 0; i < a->nchaves; i++) {
-      map(a->chaves[i]);
-    }
+    p = p->prox;
   }
 }
 
 // Busca o primeiro elemento maior ou igual a data
-TARVBMG* TARVBMG_busca_maior(TARVBMG* a, void* data, bool (*menor_que)(void*, void*)) {
-  // todo: not working
+TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, void* data, bool (*menor_que)(void*, void*)) {
   if (!a) return NULL;
-  int i = 0;
-
   if (a->folha) return a;
 
-  while (i < a->nchaves && LT(data, a->chaves[i])) i++;
+  int i = 0;
+  while (i < a->nchaves && !LT(data, a->chaves[i])) i++;
 
-  // if (i < a->nchaves && EQ(data, a->chaves[i])) return a;
-
-  return TARVBMG_busca_maior(a->filhos[i], data, menor_que);
+  return TARVBMG_busca_maior_que(a->filhos[i], data, menor_que);
 }
