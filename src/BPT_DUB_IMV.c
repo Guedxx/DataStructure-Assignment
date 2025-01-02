@@ -2,8 +2,8 @@
 // Created by nathan on 1/2/25.
 //
 
-#include "TARVBMG.c"
 #include "TImoveis.c"
+#include "TARVBMG.c"
 
 typedef struct DubImv {
     double data;
@@ -46,10 +46,10 @@ BPT_DUB_IMV* BPT_DUB_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data) {
+BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data, Imovel* imv) {
     DUB_IMV dub_imv;
     dub_imv.data = data;
-    dub_imv.imv = NULL;
+    dub_imv.imv = imv;
     return TARVBMG_busca(a, &dub_imv, BPT_DUB_IMV_menor_que);
 }
 
@@ -60,8 +60,11 @@ BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, Imovel* imv, 
     return TARVBMG_insere(T, data_ptr, t, BPT_DUB_IMV_menor_que);
 }
 
-BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, const int t) {
-    return TARVBMG_retira(arv, &data, t, BPT_DUB_IMV_menor_que);
+BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, Imovel* imv, const int t) {
+    DUB_IMV dub_imv;
+    dub_imv.data = data;
+    dub_imv.imv = imv;
+    return TARVBMG_retira(arv, &dub_imv, t, BPT_DUB_IMV_menor_que);
 }
 
 void BPT_DUB_IMV_libera(BPT_DUB_IMV *a) {

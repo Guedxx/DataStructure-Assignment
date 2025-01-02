@@ -2,8 +2,8 @@
 // Created by nathan on 1/2/25.
 //
 
-#include "TARVBMG.c"
 #include "TImoveis.c"
+#include "TARVBMG.c"
 
 typedef struct strImv {
     Imovel* imv;
@@ -14,7 +14,7 @@ typedef struct strImv {
 #define GET_DATA(a) (((char*)a) + sizeof(STR_IMV))
 
 // Str functions -=-
-bool BPT_STR_IMV_menor_que(const void* a, const void* b) {
+bool BPT_STR_IMV_menor_que(void* a, void* b) {
     const STR_IMV* a1 = a;
     const STR_IMV* b1 = b;
 
@@ -27,11 +27,11 @@ bool BPT_STR_IMV_menor_que(const void* a, const void* b) {
     }
     return false;
 }
-void BPT_STR_IMV_imprime_chave(const void* a) {
+void BPT_STR_IMV_imprime_chave(void* a) {
     const STR_IMV* a1 = a;
     printf("%.*s ", a1->len, GET_DATA(a1));
 }
-void BPT_STR_IMV_imprime_chave_json(const void* a, char* buffer) {
+void BPT_STR_IMV_imprime_chave_json(void* a, char* buffer) {
     const STR_IMV* a1 = a;
     while (!*buffer) buffer++;
     sprintf(buffer, "\"%.*s\"", a1->len, GET_DATA(a1));
@@ -49,17 +49,61 @@ BPT_STR_IMV* BPT_STR_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data) {
+BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data, Imovel* imv) {
     uint32_t len = strlen(data);
     char key[sizeof(STR_IMV) + len + 1];
     STR_IMV* key_ptr = (STR_IMV*) key;
 
     key_ptr->len = len;
     memcpy(GET_DATA(key_ptr), data, len);
-    key_ptr->imv = NULL;
+    key_ptr->imv = imv;
 
-    return TARVBMG_busca(a, key, BPT_STR_IMV_menor_que);
+    return TARVBMG_busca(a, key_ptr, BPT_STR_IMV_menor_que);
 }
+
+BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, Imovel* imv, const int t) {
+    uint32_t len = strlen(data);
+    char key[sizeof(STR_IMV) + len + 1];
+    STR_IMV* key_ptr = (STR_IMV*) key;
+
+    key_ptr->len = len;
+    memcpy(GET_DATA(key_ptr), data, len);
+    key_ptr->imv = imv;
+
+    return TARVBMG_insere(T, key, t, BPT_STR_IMV_menor_que);
+}
+
+BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, Imovel* imv, const int t) {
+    const uint32_t len = strlen(data);
+    char key[sizeof(STR_IMV) + len + 1];
+    STR_IMV* key_ptr = (STR_IMV*) key;
+
+    key_ptr->len = len;
+    memcpy(GET_DATA(key_ptr), data, len);
+    key_ptr->imv = imv;
+
+    return TARVBMG_retira(arv, key, t, BPT_STR_IMV_menor_que);
+}
+
+void BPT_STR_IMV_libera(BPT_STR_IMV* a) {
+    TARVBMG_libera(a);
+}
+
+void BPT_STR_IMV_imprime(const BPT_STR_IMV* a) {
+    TARVBMG_imprime(a, BPT_STR_IMV_imprime_chave);
+}
+
+void BPT_STR_IMV_imprime_chaves(BPT_STR_IMV* a) {
+    TARVBMG_imprime_chaves(a, BPT_STR_IMV_imprime_chave);
+}
+
+void BPT_STR_IMV_json(BPT_STR_IMV* a, char* buffer) {
+    TARVBMG_json(a, buffer, BPT_STR_IMV_imprime_chave_json);
+}
+
+
+
+
 
 
 

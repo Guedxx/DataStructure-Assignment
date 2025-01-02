@@ -2,8 +2,8 @@
 // Created by nathan on 1/2/25.
 //
 
-#include "TARVBMG.c"
 #include "TImoveis.c"
+#include "TARVBMG.c"
 
 typedef struct IntImv {
     int data;
@@ -46,11 +46,11 @@ BPT_INT_IMV* BPT_INT_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data) {
+BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, Imovel* imv) {
     INT_IMV int_imv;
     int_imv.data = data;
-    int_imv.imv = NULL;
-    return TARVBMG_busca(a, &data, BPT_INT_IMV_menor_que);
+    int_imv.imv = imv;
+    return TARVBMG_busca(a, &int_imv, BPT_INT_IMV_menor_que);
 }
 
 BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, Imovel* imv, const int t) {
@@ -60,8 +60,11 @@ BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, Imovel* imv, con
     return TARVBMG_insere(T, data_ptr, t, BPT_INT_IMV_menor_que);
 }
 
-BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, const int t) {
-    return TARVBMG_retira(arv, &data, t, BPT_INT_IMV_menor_que);
+BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, Imovel* imv, const int t) {
+    INT_IMV int_imv;
+    int_imv.data = data;
+    int_imv.imv = imv;
+    return TARVBMG_retira(arv, &int_imv, t, BPT_INT_IMV_menor_que);
 }
 
 void BPT_INT_IMV_libera(BPT_INT_IMV* a) {
