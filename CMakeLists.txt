@@ -12,4 +12,7 @@ add_executable(DataStructure
         src/HashMap.c
         src/BPT_DUB.c
         src/BPT_IMV.c
+        src/BPT_INT_IMV.c
+        src/BPT_DUB_IMV.c
+        src/BPT_STR_IMV.c
 )
