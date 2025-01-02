@@ -4,12 +4,12 @@
 
 
 typedef struct {
-    u_int32_t id;                           // ID único do imóvel
+    int id;                                 // ID único do imóvel
     char bairro[50];                       // Bairro do imóvel
     char tipo[30];                        // Tipo do imóvel (ex.: "casa", "apartamento")
     char rua[100];                       // Rua do imóvel (pode estar vazia)
     int numero;                         // Número do imóvel (pode ser vazio, -1 se não informado)
-    u_int32_t precoTotal;              // Preço total do imóvel
+    int precoTotal;                    // Preço total do imóvel
     double precoMetroQ;               // Preço por metro quadrado
     char descricao[3867];            // Descrição do imóvel
     char cep[9];                    // CEP do imóvel
@@ -18,7 +18,7 @@ typedef struct {
 } Imovel;
 
 
-void Imovel_init(Imovel* imovel, u_int32_t id, char bairro[], char tipo[], char rua[], int numero, u_int32_t precoTotal, double precoMetroQ, char descricao[], char cep[], double latitude, double longitude){
+void Imovel_init(Imovel* imovel, int id, char bairro[], char tipo[], char rua[], int numero, int precoTotal, double precoMetroQ, char descricao[], char cep[], double latitude, double longitude){
     strncpy(imovel->bairro, bairro, 50);
     strncpy(imovel->tipo, tipo, 30);
     strncpy(imovel->rua, rua, 100);

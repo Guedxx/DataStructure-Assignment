@@ -10,4 +10,6 @@ add_executable(DataStructure
         src/BPT_STR.c
         src/WebServer.c
         src/HashMap.c
+        src/BPT_DUB.c
+        src/BPT_IMV.c
 )

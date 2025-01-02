@@ -158,7 +158,7 @@ TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, bool (*menor_que)(vo
 // data tem que ser alocado dinamicamente
 TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, bool (*menor_que)(void*, void*)) {
   // if(TARVBMG_busca(T, mat)) return T;
-  if(TARVBMG_busca(T, data, menor_que)) return T;
+  //if(TARVBMG_busca(T, data, menor_que)) return T;
 
   if(!T){
     T=TARVBMG_cria(t);
