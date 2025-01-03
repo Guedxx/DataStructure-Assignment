@@ -158,7 +158,7 @@ TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, bool (*menor_que)(vo
 // data tem que ser alocado dinamicamente
 TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, bool (*menor_que)(void*, void*)) {
   // if(TARVBMG_busca(T, mat)) return T;
-  //if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
+  if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
 
   if(!T){
     T=TARVBMG_cria(t);
@@ -428,4 +428,44 @@ TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, void* data, bool (*menor_que)(void*
   while (i < a->nchaves && !LT(data, a->chaves[i])) i++;
 
   return TARVBMG_busca_maior_que(a->filhos[i], data, menor_que);
+}
+
+// Executa uma função em todos os elementos da árvore que estão no intervalo [min, max]
+void TARVBMG_map_range(TARVBMG* a, void* min, void* max, bool (*menor_que)(void*, void*), void(*map)(void*)) {
+  if (!a) return;
+
+  const TARVBMG* menor = TARVBMG_busca_maior_que(a, min, menor_que);
+
+  const TARVBMG* p = menor;
+
+  while (p) {
+    for (int i = 0; i < p->nchaves; i++) {
+      if (GT(p->chaves[i], max)) return;
+
+      if (LT(min, p->chaves[i]) || EQ(min, p->chaves[i])) {
+        map(p->chaves[i]);
+      }
+    }
+    p = p->prox;
+  }
+}
+
+// Executa uma função em todos os elementos da árvore que estão no intervalo [min, max]
+void TARVBMG_map_range_2(TARVBMG* a, void* min, void* max, bool (*menor_que)(void*, void*), void(*map)(void*, void*), void* arg) {
+  if (!a) return;
+
+  const TARVBMG* menor = TARVBMG_busca_maior_que(a, min, menor_que);
+
+  const TARVBMG* p = menor;
+
+  while (p) {
+    for (int i = 0; i < p->nchaves; i++) {
+      if (GT(p->chaves[i], max)) return;
+
+      if (LT(min, p->chaves[i]) || EQ(min, p->chaves[i])) {
+        map(p->chaves[i], arg);
+      }
+    }
+    p = p->prox;
+  }
 }

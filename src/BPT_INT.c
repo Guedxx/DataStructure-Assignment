@@ -63,8 +63,18 @@ BPT_INT* BPT_INT_busca_maior(BPT_INT* a, int data) {
   return TARVBMG_busca_maior_que(a, &data, BPT_INT_menor_que);
 }
 
+void BPT_INT_map_range(BPT_INT* a, int start, int end, void(*map)(void*)) {
+  TARVBMG_map_range(a, &start, &end, BPT_INT_menor_que, map);
+}
+
 
 //Testes
+
+void map_test(void* n) {
+  int v = *((int*)n);
+  printf("%d ", v);
+}
+
 int main() {
   falloc_start("BPT_INT_test.bin");
   BPT_INT *a = BPT_INT_inicializa();
@@ -95,8 +105,10 @@ int main() {
   a = BPT_INT_insere(a, 5, 2);
   BPT_INT_imprime(a);
 
+  printf("Testing map range:\n");
+  BPT_INT_map_range(a, 5, 5, map_test); // all: -10 -7 1 2 3 4 5 5 5 6 7 8 9 10
+  printf("\n");
 
-  BPT_INT_imprime(a);
   BPT_INT_libera(a);
 
   // printf("Jason: \n");

@@ -46,39 +46,40 @@ void BPT_IMV_libera(BPT_IMV* a) {
 }
 
 void BPT_IMV_insere(BPT_IMV* a, Imovel* imovel, const int t) {
-    BPT_INT_IMV_insere(a->id, imovel->id, imovel, t);
-    BPT_STR_IMV_insere(a->bairro, imovel->bairro, imovel, t);
-    BPT_STR_IMV_insere(a->rua, imovel->rua, imovel, t);
-    BPT_STR_IMV_insere(a->tipo, imovel->tipo, imovel, t);
-    BPT_STR_IMV_insere(a->cep, imovel->cep, imovel, t);
-    BPT_INT_IMV_insere(a->preco, imovel->precoTotal, imovel, t);
-    BPT_DUB_IMV_insere(a->latitude, imovel->latitude, imovel, t);
-    BPT_DUB_IMV_insere(a->longitude, imovel->longitude, imovel, t);
+    a->id = BPT_INT_IMV_insere(a->id, imovel->id, imovel, t);
+    a->bairro = BPT_STR_IMV_insere(a->bairro, imovel->bairro, imovel, t);
+    a->rua = BPT_STR_IMV_insere(a->rua, imovel->rua, imovel, t);
+    a->tipo = BPT_STR_IMV_insere(a->tipo, imovel->tipo, imovel, t);
+    a->cep = BPT_STR_IMV_insere(a->cep, imovel->cep, imovel, t);
+    a->preco = BPT_INT_IMV_insere(a->preco, imovel->precoTotal, imovel, t);
+    a->latitude = BPT_DUB_IMV_insere(a->latitude, imovel->latitude, imovel, t);
+    a->longitude = BPT_DUB_IMV_insere(a->longitude, imovel->longitude, imovel, t);
 }
 
 void BPT_IMV_remove(BPT_IMV* a, Imovel* imovel, const int t) {
-    BPT_INT_IMV_retira(a->id, imovel->id, t);
-    BPT_STR_IMV_retira(a->bairro, imovel->bairro, t);
-    BPT_STR_IMV_retira(a->rua, imovel->rua, t);
-    BPT_STR_IMV_retira(a->tipo, imovel->tipo, t);
-    BPT_STR_IMV_retira(a->cep, imovel->cep, t);
-    BPT_INT_IMV_retira(a->preco, imovel->precoTotal, t);
-    BPT_DUB_IMV_retira(a->latitude, imovel->latitude, t);
-    BPT_DUB_IMV_retira(a->longitude, imovel->longitude, t);
+    a->id = BPT_INT_IMV_retira(a->id, imovel->id, imovel, t);
+    a->bairro = BPT_STR_IMV_retira(a->bairro, imovel->bairro, imovel, t);
+    a->rua = BPT_STR_IMV_retira(a->rua, imovel->rua, imovel, t);
+    a->tipo = BPT_STR_IMV_retira(a->tipo, imovel->tipo, imovel, t);
+    a->cep = BPT_STR_IMV_retira(a->cep, imovel->cep, imovel, t);
+    a->preco = BPT_INT_IMV_retira(a->preco, imovel->precoTotal, imovel, t);
+    a->latitude = BPT_DUB_IMV_retira(a->latitude, imovel->latitude, imovel, t);
+    a->longitude = BPT_DUB_IMV_retira(a->longitude, imovel->longitude, imovel, t);
+}
+
+Imovel* BPT_IMV_busca_id(const BPT_IMV* a, const int id) {
+    BPT_INT_IMV* b = BPT_INT_IMV_busca(a->id, id, NULL);
+    if (!b) return NULL;
+
+    int i = 0;
+    const INT_IMV* imv = b->chaves[i];
+    while (imv->data != id) {
+        i++;
+        imv = b->chaves[i];
+    }
+
+    return imv->imv;
 }
 
 
 
-/*
-    int id;                                 // ID único do imóvel
-    char bairro[50];                       // Bairro do imóvel
-    char tipo[30];                        // Tipo do imóvel (ex.: "casa", "apartamento")
-    char rua[100];                       // Rua do imóvel (pode estar vazia)
-    int numero;                         // Número do imóvel (pode ser vazio, -1 se não informado)
-    int precoTotal;                    // Preço total do imóvel
-    double precoMetroQ;               // Preço por metro quadrado
-    char descricao[3867];            // Descrição do imóvel
-    char cep[9];                    // CEP do imóvel
-    double latitude;               // Latitude do imóvel
-    double longitude;             // Longitude do imóvel
- */

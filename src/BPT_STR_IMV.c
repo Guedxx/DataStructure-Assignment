@@ -2,7 +2,7 @@
 // Created by nathan on 1/2/25.
 //
 
-#include "TImoveis.c"
+//#include "TImoveis.c"
 #include "TARVBMG.c"
 
 typedef struct strImv {

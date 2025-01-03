@@ -19,7 +19,7 @@
         write(client_socket, "HTTP/1.1 400 Bad Request", 24); \
         return; \
     } \
-    callback(json); \
+    callback(json, client_socket); \
 }
 
 // /run/media/nathan/Acer/Users/miche/Videos/Series e Filmes
