@@ -15,13 +15,14 @@ typedef struct imovel_tree {
     BPT_STR_IMV* tipo;
     BPT_STR_IMV* cep;
 
-    BPT_INT_IMV* preco;
+    BPT_DUB_IMV* preco;
 
     BPT_DUB_IMV* latitude;
     BPT_DUB_IMV* longitude;
 } BPT_IMV;
 
 BPT_IMV* imoveis;
+int imoveis_t = 2;
 
 void save_imoveis() {
     const int fd = open("imoveis.pnt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
@@ -78,7 +79,7 @@ void BPT_IMV_insere(BPT_IMV* a, Imovel* imovel, const int t) {
     a->rua = BPT_STR_IMV_insere(a->rua, imovel->rua, imovel, t);
     a->tipo = BPT_STR_IMV_insere(a->tipo, imovel->tipo, imovel, t);
     a->cep = BPT_STR_IMV_insere(a->cep, imovel->cep, imovel, t);
-    a->preco = BPT_INT_IMV_insere(a->preco, imovel->precoTotal, imovel, t);
+    a->preco = BPT_DUB_IMV_insere(a->preco, imovel->precoTotal, imovel, t);
     a->latitude = BPT_DUB_IMV_insere(a->latitude, imovel->latitude, imovel, t);
     a->longitude = BPT_DUB_IMV_insere(a->longitude, imovel->longitude, imovel, t);
 }
@@ -89,7 +90,7 @@ void BPT_IMV_remove(BPT_IMV* a, Imovel* imovel, const int t) {
     a->rua = BPT_STR_IMV_retira(a->rua, imovel->rua, imovel, t);
     a->tipo = BPT_STR_IMV_retira(a->tipo, imovel->tipo, imovel, t);
     a->cep = BPT_STR_IMV_retira(a->cep, imovel->cep, imovel, t);
-    a->preco = BPT_INT_IMV_retira(a->preco, imovel->precoTotal, imovel, t);
+    a->preco = BPT_DUB_IMV_retira(a->preco, imovel->precoTotal, imovel, t);
     a->latitude = BPT_DUB_IMV_retira(a->latitude, imovel->latitude, imovel, t);
     a->longitude = BPT_DUB_IMV_retira(a->longitude, imovel->longitude, imovel, t);
 }
@@ -100,7 +101,7 @@ void BPT_IMV_imprime(const BPT_IMV* a) {
     BPT_STR_IMV_imprime(a->rua);
     BPT_STR_IMV_imprime(a->tipo);
     BPT_STR_IMV_imprime(a->cep);
-    BPT_INT_IMV_imprime(a->preco);
+    BPT_DUB_IMV_imprime(a->preco);
     BPT_DUB_IMV_imprime(a->latitude);
     BPT_DUB_IMV_imprime(a->longitude);
 }

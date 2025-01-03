@@ -54,6 +54,10 @@ BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, Imovel* imv) {
 }
 
 BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, Imovel* imv, const int t) {
+    if (!imv) {
+        perror("Imovel nulo");
+        return T;
+    }
     INT_IMV* data_ptr = falloc(sizeof(INT_IMV));
     data_ptr->data = data;
     data_ptr->imv = imv;
@@ -61,6 +65,10 @@ BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, Imovel* imv, con
 }
 
 BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, Imovel* imv, const int t) {
+    if (!imv) {
+        perror("Imovel nulo");
+        return T;
+    }
     INT_IMV int_imv;
     int_imv.data = data;
     int_imv.imv = imv;

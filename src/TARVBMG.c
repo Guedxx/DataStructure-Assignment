@@ -193,8 +193,9 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*
   for (i = 0; i < arv->nchaves && LT(arv->chaves[i], data); i++) {}
 
   // if((i < arv->nchaves) && (ch == arv->chave[i]) && (arv->folha)){ //CASO 1
-  if((i < arv->nchaves) && EQ(data, arv->chaves[i]) && arv->folha){ //CASO 1
+  if((i < arv->nchaves) && EQ(data, arv->chaves[i]) && arv->folha){   //CASO 1
     printf("\nCASO 1\n");
+    //falloc_free(arv->chaves[i]);
     for(int j = i; j<arv->nchaves-1;j++) arv->chaves[j] = arv->chaves[j+1];
     arv->nchaves--;
     if(!arv->nchaves){ //ultima revisao: 04/2020

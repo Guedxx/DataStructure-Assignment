@@ -62,6 +62,10 @@ BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data, Imovel* imv) {
 }
 
 BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, Imovel* imv, const int t) {
+    if (!imv) {
+        perror("Imovel nulo");
+        return T;
+    }
     uint32_t len = strlen(data);
     char* key = falloc(sizeof(STR_IMV) + len + 1);
     STR_IMV* key_ptr = (STR_IMV*) key;
@@ -74,6 +78,10 @@ BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, Imovel* imv, c
 }
 
 BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, Imovel* imv, const int t) {
+    if (!imv) {
+        perror("Imovel nulo");
+        return T;
+    }
     const uint32_t len = strlen(data);
     char key[sizeof(STR_IMV) + len + 1];
     STR_IMV* key_ptr = (STR_IMV*) key;
