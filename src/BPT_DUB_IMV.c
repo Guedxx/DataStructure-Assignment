@@ -11,7 +11,7 @@ typedef struct DubImv {
 } DUB_IMV;
 
 // Dub functions -=-
-bool BPT_DUB_IMV_menor_que(const void* a, const void* b) {
+bool BPT_DUB_IMV_menor_que(void* a, void* b) {
     const DUB_IMV* a1 = a;
     const DUB_IMV* b1 = b;
 
@@ -23,11 +23,11 @@ bool BPT_DUB_IMV_menor_que(const void* a, const void* b) {
     }
     return false;
 }
-void BPT_DUB_IMV_imprime_chave(const void* a) {
+void BPT_DUB_IMV_imprime_chave(void* a) {
     const DUB_IMV* a1 = a;
     printf("%f ", a1->data);
 }
-void BPT_DUB_IMV_imprime_chave_json(const void* a, char* buffer) {
+void BPT_DUB_IMV_imprime_chave_json(void* a, char* buffer) {
     const DUB_IMV* a1 = a;
     char buffer2[20];
     sprintf(buffer2, "%f", a1->data);

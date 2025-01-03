@@ -1,6 +1,7 @@
 //
 // Created by nathan on 1/1/25.
 //
+#pragma once
 
 #include "TImoveis.c"
 #include "BPT_INT_IMV.c"
@@ -19,6 +20,32 @@ typedef struct imovel_tree {
     BPT_DUB_IMV* latitude;
     BPT_DUB_IMV* longitude;
 } BPT_IMV;
+
+BPT_IMV* imoveis;
+
+void save_imoveis() {
+    const int fd = open("imoveis.pnt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+        return;
+    }
+    write(fd, &imoveis, sizeof(BPT_IMV*));
+    printf("Imoveis saved to %p\n", imoveis);
+    close(fd);
+}
+
+void load_imoveis() {
+    const int fd = open("imoveis.pnt", O_RDONLY);
+    if (fd == -1) {
+        perror("open");
+        return;
+    }
+    read(fd, &imoveis, sizeof(BPT_IMV*));
+    printf("Imoveis loaded to %p\n", imoveis);
+    close(fd);
+}
+
+
 
 BPT_IMV* BPT_IMV_cria(const int t) {
     BPT_IMV* novo = (BPT_IMV*) falloc(sizeof(BPT_IMV));
@@ -67,6 +94,17 @@ void BPT_IMV_remove(BPT_IMV* a, Imovel* imovel, const int t) {
     a->longitude = BPT_DUB_IMV_retira(a->longitude, imovel->longitude, imovel, t);
 }
 
+void BPT_IMV_imprime(const BPT_IMV* a) {
+    BPT_INT_IMV_imprime(a->id);
+    BPT_STR_IMV_imprime(a->bairro);
+    BPT_STR_IMV_imprime(a->rua);
+    BPT_STR_IMV_imprime(a->tipo);
+    BPT_STR_IMV_imprime(a->cep);
+    BPT_INT_IMV_imprime(a->preco);
+    BPT_DUB_IMV_imprime(a->latitude);
+    BPT_DUB_IMV_imprime(a->longitude);
+}
+
 Imovel* BPT_IMV_busca_id(const BPT_IMV* a, const int id) {
     BPT_INT_IMV* b = BPT_INT_IMV_busca(a->id, id, NULL);
     if (!b) return NULL;
@@ -80,6 +118,16 @@ Imovel* BPT_IMV_busca_id(const BPT_IMV* a, const int id) {
 
     return imv->imv;
 }
+
+void submit_imovel(const char* json) {
+    Imovel* imovel = falloc(sizeof(Imovel));
+    Imovel_from_json(imovel, json);
+    Imovel_print(imovel);
+
+    BPT_IMV_insere(imoveis, imovel, 2);
+}
+
+//void submit_imovel(const char* json, const int client_socket);
 
 
 

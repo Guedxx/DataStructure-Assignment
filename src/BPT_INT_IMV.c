@@ -11,7 +11,7 @@ typedef struct IntImv {
 } INT_IMV;
 
 // Int functions -=-
-bool BPT_INT_IMV_menor_que(const void* a, const void* b) {
+bool BPT_INT_IMV_menor_que(void* a, void* b) {
     const INT_IMV* a1 = a;
     const INT_IMV* b1 = b;
 
@@ -23,11 +23,11 @@ bool BPT_INT_IMV_menor_que(const void* a, const void* b) {
     }
     return false;
 }
-void BPT_INT_IMV_imprime_chave(const void* a) {
+void BPT_INT_IMV_imprime_chave(void* a) {
     const INT_IMV* a1 = a;
     printf("%d ", a1->data);
 }
-void BPT_INT_IMV_imprime_chave_json(const void* a, char* buffer) {
+void BPT_INT_IMV_imprime_chave_json(void* a, char* buffer) {
     const INT_IMV* a1 = a;
     char buffer2[20];
     sprintf(buffer2, "%d", a1->data);

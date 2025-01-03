@@ -1,6 +1,7 @@
 //
 // Created by nathan non 06/10/2024.
 //
+#include "falloc.c"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +11,17 @@
 #include <netinet/in.h>
 #include <pthread.h>
 
-#include "TImoveis.c"
+#include "BPT_IMV.c"
 
+
+#define ADD_POST_A(url, callback) if (strcmp((url), request_url) == 0) { \
+    char* json = find_json(strtok_r_buf); \
+    if (json == NULL) { \
+        write(client_socket, "HTTP/1.1 400 Bad Request", 24); \
+        return; \
+    } \
+    callback(json, client_socket); \
+}
 
 #define ADD_POST(url, callback) if (strcmp((url), request_url) == 0) { \
     char* json = find_json(strtok_r_buf); \
@@ -19,7 +29,8 @@
         write(client_socket, "HTTP/1.1 400 Bad Request", 24); \
         return; \
     } \
-    callback(json, client_socket); \
+    callback(json); \
+    write(client_socket, "HTTP/1.1 200 OK", 15); \
 }
 
 // /run/media/nathan/Acer/Users/miche/Videos/Series e Filmes
@@ -31,6 +42,8 @@ int server_socket;
 void handle_sigint(int sig) {
     close(server_socket);
     printf("\nServidor encerrado.\n");
+    save_imoveis();
+    falloc_end();
     exit(0);
 }
 
@@ -121,9 +134,8 @@ void handle_request(const int client_socket) {
     else if (strncmp(buffer, "POST", 4) == 0) {
         const char* request_url = strtok_r(buffer + 5, " ", &strtok_r_buf);
 
-        ADD_POST("/submit_imovel", test_imovel)
+        ADD_POST("/submit_imovel", submit_imovel);
 
-        write(client_socket, "HTTP/1.1 200 OK", 15);
     }
 
     else {
@@ -140,6 +152,19 @@ void* thread_handle_request(void* arg) {
 
 
 int main(const int argc, char *argv[]) {
+    falloc_start("ALL_DATA.bin");
+    load_imoveis();
+    // BPT_IMV_imprime(imoveis);
+    // exit(0);
+
+    // Descomente para resetar o arquivo
+    // falloc_free_all();
+    // imoveis = falloc(sizeof(BPT_IMV));
+    // // set all to 0
+    // memset(imoveis, 0, sizeof(BPT_IMV));
+    // save_imoveis();
+    // exit(0);
+
     if (argc > 1) {
         base_file_path = argv[1];
     }

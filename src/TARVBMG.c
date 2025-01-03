@@ -1,3 +1,5 @@
+#pragma once
+
 #include "TARVBMG.h"
 
 TARVBMG *TARVBMG_cria(const int t){
