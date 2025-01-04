@@ -179,16 +179,24 @@ input:focus, textarea:focus {
     width: 96%;
 }
 
+#results {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
 .imovel_s {
     background-color: rgba(237, 28, 36, 0.15);
     width: 96%;
-    margin: auto;
     padding: 5px;
     border-radius: 10px;
+    margin: 10px;
 }
 .imovel_s_description {
     background-color: rgba(237, 28, 36, 0.15);
-    height: 400px;
+    max-height: 400px;
     width: 96%;
     margin: 5px;
     padding: 5px;
