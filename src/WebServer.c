@@ -33,6 +33,9 @@
     write(client_socket, "HTTP/1.1 200 OK", 15); \
 }
 
+
+
+
 // /run/media/nathan/Acer/Users/miche/Videos/Series e Filmes
 //char* base_file_path = "/run/media/nathan/Acer/Users/miche/Videos/Series e Filmes/%s";
 char* base_file_path = "./files/%s";
@@ -135,7 +138,7 @@ void handle_request(const int client_socket) {
         const char* request_url = strtok_r(buffer + 5, " ", &strtok_r_buf);
 
         ADD_POST("/submit_imovel", submit_imovel);
-
+        ADD_POST_A("/search_imoveis", search_imoveis);
     }
 
     else {

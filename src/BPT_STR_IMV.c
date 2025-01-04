@@ -23,7 +23,10 @@ bool BPT_STR_IMV_menor_que(void* a, void* b) {
         return true;
     }
     if (cmp == 0) {
-        return a1->imv == NULL || b1->imv == NULL || a1->imv->id < b1->imv->id;
+        if (a1->imv == NULL || b1->imv == NULL) {
+            return false;
+        }
+        return a1->imv->id < b1->imv->id;
     }
     return false;
 }
@@ -64,7 +67,7 @@ BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data, Imovel* imv) {
 BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, Imovel* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
-        return T;
+        return NULL;
     }
     uint32_t len = strlen(data);
     char* key = falloc(sizeof(STR_IMV) + len + 1);
@@ -80,7 +83,7 @@ BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, Imovel* imv, c
 BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, Imovel* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
-        return T;
+        return NULL;
     }
     const uint32_t len = strlen(data);
     char key[sizeof(STR_IMV) + len + 1];
@@ -109,7 +112,24 @@ void BPT_STR_IMV_json(BPT_STR_IMV* a, char* buffer) {
     TARVBMG_json(a, buffer, BPT_STR_IMV_imprime_chave_json);
 }
 
+void BPT_STR_IMV_map_range_2(BPT_STR_IMV* a, const char* min, const char* max, void(*map)(void*, void*), void* arg) {
+    const uint32_t min_len = strlen(min);
+    const uint32_t max_len = strlen(max);
 
+    char min_key[sizeof(STR_IMV) + min_len + 1];
+    STR_IMV* min_key_ptr = (STR_IMV*) min_key;
+    min_key_ptr->len = min_len;
+    memcpy(GET_DATA(min_key_ptr), min, min_len);
+    min_key_ptr->imv = NULL;
+
+    char max_key[sizeof(STR_IMV) + max_len + 1];
+    STR_IMV* max_key_ptr = (STR_IMV*) max_key;
+    max_key_ptr->len = max_len;
+    memcpy(GET_DATA(max_key_ptr), max, max_len);
+    max_key_ptr->imv = NULL;
+
+    TARVBMG_map_range_2(a, min_key_ptr, max_key_ptr, BPT_STR_IMV_menor_que, map, arg);
+}
 
 
 

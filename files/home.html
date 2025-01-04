@@ -128,17 +128,28 @@
 
                 <div class="form-group-0">
                     <div class="form-group-2">
-                        <label for="latitude_s">Latitude:</label>
-                        <input type="number" id="latitude_s" name="latitude">
+                        <label for="latitude_s_min">Latitude min:</label>
+                        <input type="number" id="latitude_s_min" name="latitude_min">
                     </div>
                     <div class="form-group-2">
-                        <label for="longitude_s">Longitude:</label>
-                        <input type="number" id="longitude_s" name="longitude">
+                        <label for="longitude_s_min">Longitude min:</label>
+                        <input type="number" id="longitude_s_min" name="longitude_min">
+                    </div>
+                </div>
+
+                <div class="form-group-0">
+                    <div class="form-group-2">
+                        <label for="latitude_s_max">Latitude max:</label>
+                        <input type="number" id="latitude_s_max" name="latitude_max">
+                    </div>
+                    <div class="form-group-2">
+                        <label for="longitude_s_max">Longitude max:</label>
+                        <input type="number" id="longitude_s_max" name="longitude_max">
                     </div>
                 </div>
 
                 <div class="center-btn-div">
-                    <button type="button" id="searchButton">Buscar</button>
+                    <button type="button" id="searchButton" onclick="pesquisar()">Buscar</button>
                 </div>
             </form>
 

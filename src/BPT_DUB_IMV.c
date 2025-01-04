@@ -19,7 +19,10 @@ bool BPT_DUB_IMV_menor_que(void* a, void* b) {
         return true;
     }
     if (a1->data == b1->data) {
-        return a1->imv == NULL || b1->imv == NULL || a1->imv->id < b1->imv->id;
+        if (a1->imv == NULL || b1->imv == NULL) {
+            return false;
+        }
+        return a1->imv->id < b1->imv->id;
     }
     return false;
 }
@@ -56,7 +59,7 @@ BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data, Imovel* imv) {
 BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, Imovel* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
-        return T;
+        return NULL;
     }
     DUB_IMV* data_ptr = falloc(sizeof(DUB_IMV));
     data_ptr->data = data;
@@ -67,7 +70,7 @@ BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, Imovel* imv, 
 BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, Imovel* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
-        return T;
+        return NULL;
     }
     DUB_IMV dub_imv;
     dub_imv.data = data;
@@ -91,3 +94,8 @@ void BPT_DUB_IMV_json(BPT_DUB_IMV* a, char* buffer) {
     TARVBMG_json(a, buffer, BPT_DUB_IMV_imprime_chave_json);
 }
 
+void BPT_DUB_IMV_map_range_2(BPT_DUB_IMV* a, double min, double max, void(*map)(void*, void*), void* arg) {
+    DUB_IMV min_imv = {min, NULL};
+    DUB_IMV max_imv = {max, NULL};
+    TARVBMG_map_range_2(a, &min_imv, &max_imv, BPT_DUB_IMV_menor_que, map, arg);
+}
