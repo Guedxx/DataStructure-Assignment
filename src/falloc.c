@@ -1,7 +1,7 @@
 //
 // Created by nathan on 12/26/24.
 //
-
+#pragma once
 #define _GNU_SOURCE
 
 #include <stdio.h>

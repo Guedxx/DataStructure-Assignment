@@ -60,11 +60,21 @@ void BPT_INT_json(BPT_INT* a, char* buffer){
 }
 
 BPT_INT* BPT_INT_busca_maior(BPT_INT* a, int data) {
-  return TARVBMG_busca_maior(a, &data, BPT_INT_menor_que);
+  return TARVBMG_busca_maior_que(a, &data, BPT_INT_menor_que);
+}
+
+void BPT_INT_map_range(BPT_INT* a, int start, int end, void(*map)(void*)) {
+  TARVBMG_map_range(a, &start, &end, BPT_INT_menor_que, map);
 }
 
 
-// Testes
+//Testes
+
+void map_test(void* n) {
+  int v = *((int*)n);
+  printf("%d ", v);
+}
+
 int main() {
   falloc_start("BPT_INT_test.bin");
   BPT_INT *a = BPT_INT_inicializa();
@@ -73,10 +83,32 @@ int main() {
       a = BPT_INT_insere(a, i, 2);
   }
 
-  BPT_INT* b = BPT_INT_busca_maior(a, 5); // (*((int**)(b->chaves)))[1]
+  a = BPT_INT_insere(a, -7, 2);
+  a = BPT_INT_insere(a, -10, 2);
 
+  BPT_INT* b = BPT_INT_busca_maior(a, 5); // (*((int**)(b->chaves)))[1]
+  printf("Maior que 5: %d\n", (*((int**)(b->chaves))[0]));
 
   BPT_INT_imprime(a);
+
+  const BPT_INT* menor = TARVBMG_busca_menor(a);
+  printf("Menor: %d\n", (*((int**)(menor->chaves))[0]));
+
+  const BPT_INT* maior = TARVBMG_busca_maior(a);
+  printf("Maior: %d\n", (*((int**)(maior->chaves))[maior->nchaves - 1]));
+
+  printf("Adding 5\n");
+  a = BPT_INT_insere(a, 5, 2);
+  BPT_INT_imprime(a);
+
+  printf("Adding 5\n");
+  a = BPT_INT_insere(a, 5, 2);
+  BPT_INT_imprime(a);
+
+  printf("Testing map range:\n");
+  BPT_INT_map_range(a, 5, 5, map_test); // all: -10 -7 1 2 3 4 5 5 5 6 7 8 9 10
+  printf("\n");
+
   BPT_INT_libera(a);
 
   // printf("Jason: \n");

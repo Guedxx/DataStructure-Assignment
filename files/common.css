@@ -175,7 +175,33 @@ input:focus, textarea:focus {
     margin: 5px;
 }
 
+.search-results {
+    width: 96%;
+}
 
+.imovel_s {
+    background-color: rgba(237, 28, 36, 0.15);
+    width: 96%;
+    margin: auto;
+    padding: 5px;
+    border-radius: 10px;
+}
+.imovel_s_description {
+    background-color: rgba(237, 28, 36, 0.15);
+    height: 400px;
+    width: 96%;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 10px;
+    overflow-y: scroll;
+}
+.imovel_s_description p {
+    max-width: 400px;
+    /*overflow-wrap: break-word;*/
+    /*word-wrap: break-word;*/
+    hyphens: auto;
+    margin: auto;
+}
 
 
 
