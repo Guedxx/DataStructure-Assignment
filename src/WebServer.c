@@ -139,6 +139,7 @@ void handle_request(const int client_socket) {
 
         ADD_POST("/submit_imovel", submit_imovel);
         ADD_POST_A("/search_imoveis", search_imoveis);
+        ADD_POST_A("/delete_imovel", delete_imovel);
     }
 
     else {

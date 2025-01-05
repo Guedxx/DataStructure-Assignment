@@ -82,8 +82,9 @@ void* falloc(const size_t size) {
         current = (char*)current + sizeof(BlockHeader) + header->size;
     }
 
+    size_t expand_size = (((size + sizeof(BlockHeader)) / FILE_SIZE) * FILE_SIZE) + FILE_SIZE;
     // allocar mais memória no arquivo
-    size_t new_size = falloc_ctx.total_size + FILE_SIZE;
+    size_t new_size = falloc_ctx.total_size + expand_size;
     if (ftruncate(falloc_ctx.fd, (long) new_size) == -1) {
         perror("ftruncate failed");
         exit(1);
@@ -92,7 +93,7 @@ void* falloc(const size_t size) {
 
     falloc_ctx.base_addr = mremap(
         falloc_ctx.base_addr,
-        falloc_ctx.total_size - FILE_SIZE,
+        falloc_ctx.total_size - expand_size,
         falloc_ctx.total_size,
         0
     );
@@ -102,7 +103,7 @@ void* falloc(const size_t size) {
     }
 
     BlockHeader* header = current;
-    header->size = FILE_SIZE - sizeof(BlockHeader);
+    header->size = expand_size - sizeof(BlockHeader);
     header->is_free = true;
 
     return falloc(size);

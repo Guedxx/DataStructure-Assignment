@@ -6,10 +6,10 @@
 #include <string.h>
 #include <ctype.h>
 
-#define SEND_JSON(json) do { \
+#define SEND_JSON(json) { \
     write(client_socket, "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n", 51); \
     write(client_socket, (json), strlen(json)); \
-} while (0)
+}
 
 char* extract_json_value(const char* json, const char* key, char* buffer, size_t buffer_size) {
     char search_key[128];

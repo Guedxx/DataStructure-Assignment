@@ -90,11 +90,11 @@ void Imovel_from_json(Imovel* imovel, const char* json) {
     sscanf(json, "{\"id\": %u, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
 }
 
-void test_imovel(const char* json, const int client_socket) {
-    Imovel imovel;
-    Imovel_from_json(&imovel, json);
-    Imovel_print(&imovel);
-}
+// void test_imovel(const char* json, const int client_socket) {
+//     Imovel imovel;
+//     Imovel_from_json(&imovel, json);
+//     Imovel_print(&imovel);
+// }
 
 // teste
 // int main() {

@@ -104,6 +104,7 @@ function renderResults(imoveis) {
 }
 
 function deleteAll(){
+    // todo
     fetch(`/delete_all`, {
         method: 'DELETE',
     }).then(response => {
@@ -118,8 +119,12 @@ function deleteAll(){
 }
 
 function deleteImovel(id) {
-    fetch(`/delete_imovel/${id}`, {
-        method: 'DELETE',
+    fetch(`/delete_imovel`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id: id})
     }).then(response => {
         if (response.ok) {
             alert(`Imóvel ID ${id} apagado com sucesso.`);

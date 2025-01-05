@@ -281,7 +281,6 @@ void filter(Imovel** list1, Imovel** list2) {
     ((uint64_t*) list1 -1)[0] = len1;
 }
 
-
 void search_imoveis(const char* json, const int client_socket) {
     printf("Searching imoveis...\n");
     ImovelSearch imv_s;
@@ -402,4 +401,8 @@ void search_imoveis(const char* json, const int client_socket) {
     }
     strcat(buffer, "]");
     SEND_JSON(buffer);
+}
+void delete_imovel(const char* json, const int client_socket) {
+
+    SEND_JSON("{}");
 }
