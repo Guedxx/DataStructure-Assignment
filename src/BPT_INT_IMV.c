@@ -11,7 +11,7 @@ typedef struct IntImv {
 } INT_IMV;
 
 // Int functions -=-
-bool BPT_INT_IMV_menor_que(void* a, void* b) {
+char BPT_INT_IMV_menor_que(void* a, void* b) {
     const INT_IMV* a1 = a;
     const INT_IMV* b1 = b;
 
@@ -20,7 +20,7 @@ bool BPT_INT_IMV_menor_que(void* a, void* b) {
     }
     if (a1->data == b1->data) {
         if (a1->imv == NULL || b1->imv == NULL) {
-            return false;
+            return 2;
         }
         return a1->imv->id < b1->imv->id;
     }

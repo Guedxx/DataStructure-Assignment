@@ -14,7 +14,7 @@ typedef struct strImv {
 #define GET_DATA(a) (((char*)a) + sizeof(STR_IMV))
 
 // Str functions -=-
-bool BPT_STR_IMV_menor_que(void* a, void* b) {
+char BPT_STR_IMV_menor_que(void* a, void* b) {
     const STR_IMV* a1 = a;
     const STR_IMV* b1 = b;
 
@@ -24,7 +24,7 @@ bool BPT_STR_IMV_menor_que(void* a, void* b) {
     }
     if (cmp == 0) {
         if (a1->imv == NULL || b1->imv == NULL) {
-            return false;
+            return 2;
         }
         return a1->imv->id < b1->imv->id;
     }

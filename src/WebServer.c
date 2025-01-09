@@ -40,12 +40,13 @@
 //char* base_file_path = "/run/media/nathan/Acer/Users/miche/Videos/Series e Filmes/%s";
 char* base_file_path = "./files/%s";
 
-int server_socket;
+static int server_socket = -1;
 #include <signal.h>
 void handle_sigint(int sig) {
-    close(server_socket);
+    if (server_socket != -1) {
+        close(server_socket);
+    }
     printf("\nServidor encerrado.\n");
-    save_imoveis();
     falloc_end();
     exit(0);
 }
@@ -155,22 +156,21 @@ void* thread_handle_request(void* arg) {
 }
 
 
-int main(const int argc, char *argv[]) {
-    falloc_start("ALL_DATA.bin");
-    load_imoveis();
-    // BPT_IMV_imprime(imoveis);
-    // exit(0);
+typedef struct {
+    char server_directory[100];
+    uint16_t port;
+} start_web_server_args;
 
-    // Descomente para resetar o arquivo
-    // falloc_free_all();
-    // imoveis = falloc(sizeof(BPT_IMV));
-    // // set all to 0
-    // memset(imoveis, 0, sizeof(BPT_IMV));
-    // save_imoveis();
-    // exit(0);
-
-    if (argc > 1) {
-        base_file_path = argv[1];
+bool is_initialized = false;
+void* start_web_server(void* args) {
+    if (is_initialized) {
+        return 0;
+    }
+    char* server_directory = ((start_web_server_args*) args)->server_directory;
+    const uint16_t port = ((start_web_server_args*) args)->port;
+    is_initialized = true;
+    if (server_directory[0] != '\0') {
+        base_file_path = server_directory;
     }
 
     struct sockaddr_in server_addr, client_addr;
@@ -183,7 +183,7 @@ int main(const int argc, char *argv[]) {
     }
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(7789);
+    server_addr.sin_port = htons(port); // 7789
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
@@ -196,7 +196,7 @@ int main(const int argc, char *argv[]) {
         exit(1);
     }
 
-    printf("Servidor iniciado na porta 7789...\nhttp://localhost:7789/\n");
+    printf("Servidor iniciado na porta %d...\nhttp://localhost:%d/\n", port, port);
 
     signal(SIGTERM, handle_sigint);
     while (1) {
@@ -212,8 +212,9 @@ int main(const int argc, char *argv[]) {
             perror("pthread_create");
             close(client_socket);
         } else {
-            pthread_detach(thread_id); // Detach the thread to handle its own cleanup
+            pthread_detach(thread_id);
         }
     }
+    return NULL;
 }
 
