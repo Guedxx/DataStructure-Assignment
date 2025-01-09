@@ -32,7 +32,7 @@ void TARVBMG_libera(TARVBMG *a){
   }
 }
 
-TARVBMG *TARVBMG_busca(TARVBMG *a, void* data, bool (*menor_que)(void*, void*)){
+TARVBMG *TARVBMG_busca(TARVBMG *a, void* data, char (*menor_que)(void*, void*)){
   if (!a) return NULL;
   int i = 0;
 
@@ -131,7 +131,7 @@ TARVBMG *divisao(TARVBMG *x, int i, TARVBMG* y, int t) {
 }
 
 
-TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, bool (*menor_que)(void*, void*)) {
+TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, char (*menor_que)(void*, void*)) {
   int i = x->nchaves-1;
   if(x->folha){
     // while((i>=0) && (mat < x->chave[i])){
@@ -158,7 +158,7 @@ TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, bool (*menor_que)(vo
 }
 
 // data tem que ser alocado dinamicamente
-TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, bool (*menor_que)(void*, void*)) {
+TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, char (*menor_que)(void*, void*)) {
   // if(TARVBMG_busca(T, mat)) return T;
   if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
 
@@ -185,7 +185,7 @@ TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, bool (*menor_que)(void*, 
 }
 
 
-TARVBMG* remover(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*)) {
+TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*)) {
   if(!arv) return arv;
   int i;
 
@@ -349,7 +349,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*
   return arv;
 }
 
-TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, bool (*menor_que)(void*, void*)) {
+TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*)) {
   //if(!arv || !TARVBMG_busca(arv, k)) return arv;
   if(!arv || !TARVBMG_busca(arv, data, menor_que)) return arv;
   //return remover(arv, k, t);
@@ -423,7 +423,7 @@ void TARVBMG_map(TARVBMG* a, void(*map)(void*)) {
 }
 
 // Busca o primeiro elemento maior ou igual a data
-TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, void* data, bool (*menor_que)(void*, void*)) {
+TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, void* data, char (*menor_que)(void*, void*)) {
   if (!a) return NULL;
   if (a->folha) return a;
 
@@ -434,7 +434,7 @@ TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, void* data, bool (*menor_que)(void*
 }
 
 // Executa uma função em todos os elementos da árvore que estão no intervalo [min, max]
-void TARVBMG_map_range(TARVBMG* a, void* min, void* max, bool (*menor_que)(void*, void*), void(*map)(void*)) {
+void TARVBMG_map_range(TARVBMG* a, void* min, void* max, char (*menor_que)(void*, void*), void(*map)(void*)) {
   if (!a) return;
 
   const TARVBMG* menor = TARVBMG_busca_maior_que(a, min, menor_que);
@@ -454,7 +454,8 @@ void TARVBMG_map_range(TARVBMG* a, void* min, void* max, bool (*menor_que)(void*
 }
 
 // Executa uma função em todos os elementos da árvore que estão no intervalo [min, max]
-void TARVBMG_map_range_2(TARVBMG* a, void* min, void* max, bool (*menor_que)(void*, void*), void(*map)(void*, void*), void* arg) {
+// menor_que deve retornar 2 se os elementos forem iguais
+void TARVBMG_map_range_2(TARVBMG* a, void* min, void* max, char (*menor_que)(void*, void*), void(*map)(void*, void*), void* arg) {
   if (!a) return;
 
   const TARVBMG* menor = TARVBMG_busca_maior_que(a, min, menor_que);
@@ -465,7 +466,7 @@ void TARVBMG_map_range_2(TARVBMG* a, void* min, void* max, bool (*menor_que)(voi
     for (int i = 0; i < p->nchaves; i++) {
       if (GT(p->chaves[i], max)) return;
 
-      if (LT(min, p->chaves[i]) || EQ(min, p->chaves[i])) {
+      if (LT(min, p->chaves[i]) || menor_que(min, p->chaves[i]) == 2) {
         map(p->chaves[i], arg);
       }
     }

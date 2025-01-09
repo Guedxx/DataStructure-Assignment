@@ -11,7 +11,7 @@ typedef struct DubImv {
 } DUB_IMV;
 
 // Dub functions -=-
-bool BPT_DUB_IMV_menor_que(void* a, void* b) {
+char BPT_DUB_IMV_menor_que(void* a, void* b) {
     const DUB_IMV* a1 = a;
     const DUB_IMV* b1 = b;
 
@@ -20,7 +20,7 @@ bool BPT_DUB_IMV_menor_que(void* a, void* b) {
     }
     if (a1->data == b1->data) {
         if (a1->imv == NULL || b1->imv == NULL) {
-            return false;
+            return 2;
         }
         return a1->imv->id < b1->imv->id;
     }

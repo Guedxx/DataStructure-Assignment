@@ -49,7 +49,8 @@ int main() {
     }
     falloc_start(buf);
     printf("Presado usuário, você deseja resetar o arquivo? (s/N)\n");
-    scanf("%s", buf);
+    //scanf("%s", buf);
+    fgets(buf, sizeof(buf), stdin);
     if (buf[0] == 's' || buf[0] == 'S' || buf[0] == 'y' || buf[0] == 'Y') {
         resetar_file();
     }
@@ -60,8 +61,8 @@ int main() {
     printf("Bom, usuário. O arquivo foi carregado com sucesso.\n");
     printf("E tem essas Árvores B+: [");
     for (size_t i = 0; i < imoveis_list->len; i++) {
-        BPT_IMV* imv = *(BPT_IMV**) TL_get(imoveis_list, i);
-        printf("%p", imv);
+        IMV_TREE_P_T* imv = TL_get(imoveis_list, i);
+        printf("%p", imv->imoveis);
         if (i != imoveis_list->len - 1) {
             printf(", ");
         }
@@ -86,9 +87,12 @@ int main() {
         printf("Digite 'sair' para encerrar o programa.\n");
         printf("Digite 'ver' para ver as árvores.\n");
         printf("Digite 'add t' para adcionar uma arvore.\n");
-        printf("Digite 'set arvore_pointer' para setar arvore_pointer como arvore atual");
+        printf("Digite 'set arvore_pointer' para setar arvore_pointer como arvore atual\n");
         printf("Digite 'del arvore_pointer' para deletar uma arvore.\n");
         printf("Digite 'csv filename' para ler um arquivo csv.\n");
+        printf("Digite 'imprimir' para imprimir a arvore atual.\n");
+        printf("Digite 'alloc?' para ver o espaço alocado.\n");
+        printf("Digite 'free?' para ver o espaço livre.\n");
         fgets(buf, sizeof(buf), stdin);
 
         if (strncmp(buf, "ver", 3) == 0) {
@@ -134,6 +138,7 @@ int main() {
                 if (imv->imoveis == procurando) {
                     TL_set(imoveis_list, i, TL_get(imoveis_list, imoveis_list->len - 1));
                     TL_pop(imoveis_list);
+                    BPT_IMV_libera(imv->imoveis);
                     falloc_free(imv->imoveis);
                     break;
                 }
@@ -170,6 +175,18 @@ int main() {
                     break;
                 }
             }
+        }
+        else if (strncmp(buf, "imprimir", 8) == 0) {
+            printf("\033[H\033[J");
+            BPT_IMV_imprime(imoveis);
+        }
+        else if (strncmp(buf, "alloc?", 6) == 0) {
+            printf("\033[H\033[J");
+            printf("Espaço alocado: %d\n", falloc_allocated_size());
+        }
+        else if (strncmp(buf, "free?", 5) == 0) {
+            printf("\033[H\033[J");
+            printf("Espaço livre: %d\n", falloc_free_size());
         }
         else {
             printf("\033[H\033[J");

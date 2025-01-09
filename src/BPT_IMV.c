@@ -27,27 +27,27 @@ typedef struct imovel_tree {
 BPT_IMV* imoveis;
 int imoveis_t = 2;
 
-void save_imoveis() {
-    const int fd = open("imoveis.pnt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-    if (fd == -1) {
-        perror("open");
-        return;
-    }
-    write(fd, &imoveis, sizeof(BPT_IMV*));
-    printf("Imoveis saved to %p\n", imoveis);
-    close(fd);
-}
-
-void load_imoveis() {
-    const int fd = open("imoveis.pnt", O_RDONLY);
-    if (fd == -1) {
-        perror("open");
-        return;
-    }
-    read(fd, &imoveis, sizeof(BPT_IMV*));
-    printf("Imoveis loaded to %p\n", imoveis);
-    close(fd);
-}
+// void save_imoveis() {
+//     const int fd = open("imoveis.pnt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+//     if (fd == -1) {
+//         perror("open");
+//         return;
+//     }
+//     write(fd, &imoveis, sizeof(BPT_IMV*));
+//     printf("Imoveis saved to %p\n", imoveis);
+//     close(fd);
+// }
+//
+// void load_imoveis() {
+//     const int fd = open("imoveis.pnt", O_RDONLY);
+//     if (fd == -1) {
+//         perror("open");
+//         return;
+//     }
+//     read(fd, &imoveis, sizeof(BPT_IMV*));
+//     printf("Imoveis loaded to %p\n", imoveis);
+//     close(fd);
+// }
 
 
 
@@ -140,7 +140,7 @@ void submit_imovel(const char* json) {
     Imovel_from_json(imovel, json);
     Imovel_print(imovel);
 
-    BPT_IMV_insere(imoveis, imovel, 2);
+    BPT_IMV_insere(imoveis, imovel, imoveis_t);
 }
 
 typedef struct {
@@ -419,10 +419,10 @@ void Imovel_add_from_csv(const char* file) {
 
     char* save;
     for (char* token = strtok_r(data, "\n", &save); token != NULL; token = strtok_r(NULL, "\n", &save) ) {
-        Imovel imovel;
-        Imovel_from_string(&imovel, token);
+        Imovel* imovel = falloc(sizeof(Imovel));
+        Imovel_from_string(imovel, token);
 
-        BPT_IMV_insere(imoveis, &imovel, imoveis_t);
+        BPT_IMV_insere(imoveis, imovel, imoveis_t);
     }
 
     munmap(data, size);

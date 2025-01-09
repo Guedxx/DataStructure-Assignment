@@ -47,7 +47,6 @@ void handle_sigint(int sig) {
         close(server_socket);
     }
     printf("\nServidor encerrado.\n");
-    save_imoveis();
     falloc_end();
     exit(0);
 }
