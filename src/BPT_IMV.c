@@ -49,6 +49,8 @@ int imoveis_t = 2;
 //     close(fd);
 // }
 
+Imovel* BPT_IMV_busca_id(const BPT_IMV* a, const int id);
+
 
 
 BPT_IMV* BPT_IMV_cria(const int t) {
@@ -65,7 +67,13 @@ BPT_IMV* BPT_IMV_cria(const int t) {
     return novo;
 }
 
+void _BPT_INT_IMV_libera_all_imvs(void* a) {
+    const INT_IMV* imv = a;
+    falloc_free(imv->imv);
+}
 void BPT_IMV_libera(BPT_IMV* a) {
+    TARVBMG_map(a->id, _BPT_INT_IMV_libera_all_imvs);
+
     BPT_INT_IMV_libera(a->id);
     BPT_STR_IMV_libera(a->bairro);
     BPT_STR_IMV_libera(a->rua);
@@ -78,6 +86,10 @@ void BPT_IMV_libera(BPT_IMV* a) {
 }
 
 void BPT_IMV_insere(BPT_IMV* a, Imovel* imovel, const int t) {
+    if (BPT_IMV_busca_id(a, imovel->id)) {
+        return;
+    }
+
     a->id = BPT_INT_IMV_insere(a->id, imovel->id, imovel, t);
     a->bairro = BPT_STR_IMV_insere(a->bairro, imovel->bairro, imovel, t);
     a->rua = BPT_STR_IMV_insere(a->rua, imovel->rua, imovel, t);
@@ -99,6 +111,7 @@ void BPT_IMV_remove(BPT_IMV* a, Imovel* imovel, const int t) {
     a->latitude = BPT_DUB_IMV_retira(a->latitude, imovel->latitude, imovel, t);
     a->longitude = BPT_DUB_IMV_retira(a->longitude, imovel->longitude, imovel, t);
     a->len--;
+    falloc_free(imovel);
 }
 
 void BPT_IMV_imprime(const BPT_IMV* a) {
@@ -138,7 +151,10 @@ Imovel* BPT_IMV_busca_id(const BPT_IMV* a, const int id) {
 void submit_imovel(const char* json) {
     Imovel* imovel = falloc(sizeof(Imovel));
     Imovel_from_json(imovel, json);
+
+    #ifdef DEBUG
     Imovel_print(imovel);
+    #endif
 
     BPT_IMV_insere(imoveis, imovel, imoveis_t);
 }
@@ -254,7 +270,7 @@ void add_imv2list_dub(void* v, void* l) {
     ((uint64_t*)l)[0]++;
 }
 
-// Removes from list1 all elements that are not in list2 (the list are not sorted)
+// Remove da lista 1 os elementos que não estão na lista 2
 void filter(Imovel** list1, Imovel** list2) {
     uint64_t len1 = ((uint32_t*) list1)[0];
     const uint64_t len2 = ((uint32_t*) list2)[0];
@@ -282,7 +298,9 @@ void filter(Imovel** list1, Imovel** list2) {
 }
 
 void search_imoveis(const char* json, const int client_socket) {
+    #ifdef DEBUG
     printf("Searching imoveis...\n");
+    #endif
     ImovelSearch imv_s;
     ImovelSearch_from_json(&imv_s, json);
 
@@ -296,7 +314,9 @@ void search_imoveis(const char* json, const int client_socket) {
             SEND_JSON(buffer);
         }
         else {
+            #ifdef DEBUG
             printf("Imovel não encontrado\n");
+            #endif
             SEND_JSON("[]");
         }
         return;
@@ -416,6 +436,11 @@ void Imovel_add_from_csv(const char* file) {
     }
     const size_t size = lseek(fd, 0, SEEK_END);
     char* data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+    if (data == MAP_FAILED) {
+        perror("mmap");
+        exit(1);
+    }
+    close(fd);
 
     char* save;
     for (char* token = strtok_r(data, "\n", &save); token != NULL; token = strtok_r(NULL, "\n", &save) ) {
