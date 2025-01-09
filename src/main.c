@@ -91,12 +91,13 @@ int main() {
         printf("Digite 'del arvore_pointer' para deletar uma arvore.\n");
         printf("Digite 'csv filename' para ler um arquivo csv.\n");
         printf("Digite 'imprimir' para imprimir a arvore atual.\n");
-        printf("Digite 'alloc?' para ver o espaço alocado.\n");
-        printf("Digite 'free?' para ver o espaço livre.\n");
+        printf("Digite 'alloc' para ver o espaço alocado.\n");
+        printf("Digite 'free' para ver o espaço livre.\n");
         fgets(buf, sizeof(buf), stdin);
+        printf("\033[H\033[J");
 
         if (strncmp(buf, "ver", 3) == 0) {
-            printf("\033[H\033[J");
+            
             printf("Você tem essas Árvores B+: [");
             for (size_t i = 0; i < imoveis_list->len; i++) {
                 IMV_TREE_P_T* imv = TL_get(imoveis_list, i);
@@ -112,7 +113,6 @@ int main() {
             int t;
             const char* t_str = strstr(buf, " ");
             if (t_str == NULL) {
-                printf("\033[H\033[J");
                 printf("Por favor, insira o valor de t.\n");
                 continue;
             }
@@ -122,11 +122,11 @@ int main() {
             TL_push(imoveis_list, &new_imv_t);
             imoveis = new_imv;
             imoveis_t = t;
+            printf("Nova árvore criada com sucesso.\n\n");
         }
         else if (strncmp(buf, "del", 3) == 0) {
             const char* ptr_str = strstr(buf, " ");
             if (ptr_str == NULL) {
-                printf("\033[H\033[J");
                 printf("Por favor, insira o ponteiro da árvore que deseja deletar.\n");
                 continue;
             }
@@ -138,8 +138,12 @@ int main() {
                 if (imv->imoveis == procurando) {
                     TL_set(imoveis_list, i, TL_get(imoveis_list, imoveis_list->len - 1));
                     TL_pop(imoveis_list);
+                    if (imv->imoveis == imoveis) {
+                        imoveis = NULL;
+                    }
                     BPT_IMV_libera(imv->imoveis);
                     falloc_free(imv->imoveis);
+                    printf("Árvore deletada com sucesso.\n\n");
                     break;
                 }
             }
@@ -147,18 +151,16 @@ int main() {
         else if (strncmp(buf, "csv", 3) == 0) {
             char* file_name = strstr(buf, " ");
             if (file_name == NULL) {
-                printf("\033[H\033[J");
                 printf("Por favor, insira o nome do arquivo csv que deseja ler.\n");
                 continue;
             }
-            // remove '\n'
-            file_name[strlen(file_name) - 1] = '\0';
-            Imovel_add_from_csv(file_name + 1);
+            file_name[strlen(file_name) - 1] = '\0'; // remove '\n'
+            Imovel_add_from_csv(file_name + 1);      // +1 para remover space
+            printf("Arquivo csv lido com sucesso.\n\n");
         }
         else if (strncmp(buf, "set", 3) == 0) {
             const char* ptr_str = strstr(buf, " ");
             if (ptr_str == NULL) {
-                printf("\033[H\033[J");
                 printf("Por favor, insira o ponteiro da árvore que deseja setar.\n");
                 continue;
             }
@@ -170,26 +172,21 @@ int main() {
                 if (imv->imoveis == procurando) {
                     imoveis = imv->imoveis;
                     imoveis_t = imv->t;
-                    printf("\033[H\033[J");
                     printf("Arvore setada com sucesso.\n");
                     break;
                 }
             }
         }
         else if (strncmp(buf, "imprimir", 8) == 0) {
-            printf("\033[H\033[J");
             BPT_IMV_imprime(imoveis);
         }
-        else if (strncmp(buf, "alloc?", 6) == 0) {
-            printf("\033[H\033[J");
+        else if (strncmp(buf, "alloc", 5) == 0) {
             printf("Espaço alocado: %d\n", falloc_allocated_size());
         }
-        else if (strncmp(buf, "free?", 5) == 0) {
-            printf("\033[H\033[J");
+        else if (strncmp(buf, "free", 4) == 0) {
             printf("Espaço livre: %d\n", falloc_free_size());
         }
         else {
-            printf("\033[H\033[J");
             printf("Comando não reconhecido.\n");
         }
     }

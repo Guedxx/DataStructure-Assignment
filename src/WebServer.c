@@ -112,10 +112,11 @@ void handle_request(const int client_socket) {
     if (n <= 0) return;
     buffer[n] = '\0';
 
+    #ifdef DEBUG
     // Usando write no lugar de printf para evitar problemas com concorrência
     write(STDOUT_FILENO, "Requisição recebida:\n", 21);
     write(STDOUT_FILENO, buffer, n);
-
+    #endif
 
     char* strtok_r_buf;
     // Checar se é GET ou POST
@@ -196,7 +197,11 @@ void* start_web_server(void* args) {
         exit(1);
     }
 
-    printf("Servidor iniciado na porta %d...\nhttp://localhost:%d/\n", port, port);
+    printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n"
+        "Servidor iniciado na porta %d...\n"
+           "\e[0;34mhttp://localhost:%d/\e[0m\n"
+           "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n", port, port
+           );
 
     signal(SIGTERM, handle_sigint);
     while (1) {
