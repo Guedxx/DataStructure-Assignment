@@ -31,6 +31,10 @@ static FallocContext falloc_ctx;
 
 void falloc_start(const char* file_name) {
     const int fd = open(file_name, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+        exit(1);
+    }
     falloc_ctx.fd = fd;
 
     size_t file_size = lseek(fd, 0, SEEK_END);

@@ -406,3 +406,24 @@ void delete_imovel(const char* json, const int client_socket) {
 
     SEND_JSON("{}");
 }
+
+
+void Imovel_add_from_csv(const char* file) {
+    const int fd = open(file, O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+        exit(1);
+    }
+    const size_t size = lseek(fd, 0, SEEK_END);
+    char* data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+
+    char* save;
+    for (char* token = strtok_r(data, "\n", &save); token != NULL; token = strtok_r(NULL, "\n", &save) ) {
+        Imovel imovel;
+        Imovel_from_string(&imovel, token);
+
+        BPT_IMV_insere(imoveis, &imovel, imoveis_t);
+    }
+
+    munmap(data, size);
+}
