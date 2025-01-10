@@ -84,6 +84,7 @@ int main() {
     }
 
     while (strncmp(buf, "sair", 4) != 0) {
+        printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
         printf("Digite 'sair' para encerrar o programa.\n");
         printf("Digite 'ver' para ver as árvores.\n");
         printf("Digite 'add t' para adcionar uma arvore.\n");
@@ -95,6 +96,7 @@ int main() {
         printf("Digite 'free' para ver o espaço livre.\n");
         fgets(buf, sizeof(buf), stdin);
         printf("\033[H\033[J");
+        printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
 
         if (strncmp(buf, "ver", 3) == 0) {
             
@@ -122,7 +124,7 @@ int main() {
             TL_push(imoveis_list, &new_imv_t);
             imoveis = new_imv;
             imoveis_t = t;
-            printf("Nova árvore criada com sucesso.\n\n");
+            printf("Nova árvore criada com sucesso.\n");
         }
         else if (strncmp(buf, "del", 3) == 0) {
             const char* ptr_str = strstr(buf, " ");
@@ -143,7 +145,7 @@ int main() {
                     }
                     BPT_IMV_libera(imv->imoveis);
                     falloc_free(imv->imoveis);
-                    printf("Árvore deletada com sucesso.\n\n");
+                    printf("Árvore deletada com sucesso.\n");
                     break;
                 }
             }
@@ -155,7 +157,7 @@ int main() {
                 continue;
             }
             file_name[strlen(file_name) - 1] = '\0'; // remove '\n'
-            Imovel_add_from_csv(file_name + 1);      // +1 para remover space
+            IMV_add_from_csv(file_name + 1);      // +1 para remover space
             printf("Arquivo csv lido com sucesso.\n\n");
         }
         else if (strncmp(buf, "set", 3) == 0) {

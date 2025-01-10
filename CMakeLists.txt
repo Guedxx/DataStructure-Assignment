@@ -17,4 +17,6 @@ add_executable(DataStructure
         src/BPT_STR_IMV.c
         src/json.c
         src/main.c
+        src/web_functions.c
+        src/helper_functions.c
 )

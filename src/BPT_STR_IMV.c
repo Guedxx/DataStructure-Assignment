@@ -6,19 +6,17 @@
 #include "TARVBMG.c"
 
 typedef struct strImv {
-    Imovel* imv;
+    IMV* imv;
     uint32_t len;
-    //char* data;
+    char* data;
 } STR_IMV;
-
-#define GET_DATA(a) (((char*)a) + sizeof(STR_IMV))
 
 // Str functions -=-
 char BPT_STR_IMV_menor_que(void* a, void* b) {
     const STR_IMV* a1 = a;
     const STR_IMV* b1 = b;
 
-    const int cmp = strncmp(GET_DATA(a1), GET_DATA(b1), a1->len < b1->len ? a1->len : b1->len);
+    const int cmp = strncmp(a1->data, b1->data, a1->len < b1->len ? a1->len : b1->len);
     if (cmp < 0) {
         return true;
     }
@@ -32,12 +30,12 @@ char BPT_STR_IMV_menor_que(void* a, void* b) {
 }
 void BPT_STR_IMV_imprime_chave(void* a) {
     const STR_IMV* a1 = a;
-    printf("%.*s ", a1->len, GET_DATA(a1));
+    printf("%.*s ", a1->len, a1->data);
 }
 void BPT_STR_IMV_imprime_chave_json(void* a, char* buffer) {
     const STR_IMV* a1 = a;
     while (!*buffer) buffer++;
-    sprintf(buffer, "\"%.*s\"", a1->len, GET_DATA(a1));
+    sprintf(buffer, "\"%.*s\"", a1->len, a1->data);
 }
 // Str functions -=-
 
@@ -52,48 +50,43 @@ BPT_STR_IMV* BPT_STR_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data, Imovel* imv) {
-    uint32_t len = strlen(data);
-    char key[sizeof(STR_IMV) + len + 1];
-    STR_IMV* key_ptr = (STR_IMV*) key;
+BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data, IMV* imv) {
+    STR_IMV key_ptr = {
+        .len = strlen(data),
+        .data = (char*) data,
+        .imv = imv
+    };
 
-    key_ptr->len = len;
-    memcpy(GET_DATA(key_ptr), data, len);
-    key_ptr->imv = imv;
-
-    return TARVBMG_busca(a, key_ptr, BPT_STR_IMV_menor_que);
+    return TARVBMG_busca(a, &key_ptr, BPT_STR_IMV_menor_que);
 }
 
-BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, Imovel* imv, const int t) {
+BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
     }
-    uint32_t len = strlen(data);
-    char* key = falloc(sizeof(STR_IMV) + len + 1);
-    STR_IMV* key_ptr = (STR_IMV*) key;
 
-    key_ptr->len = len;
-    memcpy(GET_DATA(key_ptr), data, len);
-    key_ptr->imv = imv;
+    STR_IMV* key = falloc(sizeof(STR_IMV));
+    key->len = strlen(data);
+    key->data = (char*) data;
+    key->imv = imv;
 
     return TARVBMG_insere(T, key, t, BPT_STR_IMV_menor_que);
 }
 
-BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, Imovel* imv, const int t) {
+BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
     }
-    const uint32_t len = strlen(data);
-    char key[sizeof(STR_IMV) + len + 1];
-    STR_IMV* key_ptr = (STR_IMV*) key;
 
-    key_ptr->len = len;
-    memcpy(GET_DATA(key_ptr), data, len);
-    key_ptr->imv = imv;
+    STR_IMV key = {
+        .len = strlen(data),
+        .data = (char*) data,
+        .imv = imv
+    };
 
-    return TARVBMG_retira(arv, key, t, BPT_STR_IMV_menor_que);
+    return TARVBMG_retira(arv, &key, t, BPT_STR_IMV_menor_que);
 }
 
 void BPT_STR_IMV_libera(BPT_STR_IMV* a) {
@@ -116,19 +109,18 @@ void BPT_STR_IMV_map_range_2(BPT_STR_IMV* a, const char* min, const char* max, v
     const uint32_t min_len = strlen(min);
     const uint32_t max_len = strlen(max);
 
-    char min_key[sizeof(STR_IMV) + min_len + 1];
-    STR_IMV* min_key_ptr = (STR_IMV*) min_key;
-    min_key_ptr->len = min_len;
-    memcpy(GET_DATA(min_key_ptr), min, min_len);
-    min_key_ptr->imv = NULL;
+    STR_IMV min_key = {
+        .len = min_len,
+        .data = (char*) min,
+        .imv = NULL
+    };
+    STR_IMV max_key = {
+        .len = max_len,
+        .data = (char*) max,
+        .imv = NULL
+    };
 
-    char max_key[sizeof(STR_IMV) + max_len + 1];
-    STR_IMV* max_key_ptr = (STR_IMV*) max_key;
-    max_key_ptr->len = max_len;
-    memcpy(GET_DATA(max_key_ptr), max, max_len);
-    max_key_ptr->imv = NULL;
-
-    TARVBMG_map_range_2(a, min_key_ptr, max_key_ptr, BPT_STR_IMV_menor_que, map, arg);
+    TARVBMG_map_range_2(a, &min_key, &max_key, BPT_STR_IMV_menor_que, map, arg);
 }
 
 

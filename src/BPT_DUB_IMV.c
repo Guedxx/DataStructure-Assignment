@@ -7,7 +7,7 @@
 
 typedef struct DubImv {
     double data;
-    Imovel* imv;
+    IMV* imv;
 } DUB_IMV;
 
 // Dub functions -=-
@@ -49,14 +49,14 @@ BPT_DUB_IMV* BPT_DUB_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data, Imovel* imv) {
+BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data, IMV* imv) {
     DUB_IMV dub_imv;
     dub_imv.data = data;
     dub_imv.imv = imv;
     return TARVBMG_busca(a, &dub_imv, BPT_DUB_IMV_menor_que);
 }
 
-BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, Imovel* imv, const int t) {
+BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
@@ -67,7 +67,7 @@ BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, Imovel* imv, 
     return TARVBMG_insere(T, data_ptr, t, BPT_DUB_IMV_menor_que);
 }
 
-BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, Imovel* imv, const int t) {
+BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;

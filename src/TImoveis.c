@@ -17,22 +17,6 @@ typedef struct {
     double longitude;             // Longitude do imóvel
 } Imovel;
 
-
-// void Imovel_init(Imovel* imovel, int id, char bairro[], char tipo[], char rua[], int numero, int precoTotal, double precoMetroQ, char descricao[], char cep[], double latitude, double longitude){
-//     strncpy(imovel->bairro, bairro, 50);
-//     strncpy(imovel->tipo, tipo, 30);
-//     strncpy(imovel->rua, rua, 100);
-//     strncpy(imovel->descricao, descricao, 3867);
-//     strncpy(imovel->cep, cep, 9);
-//
-//     imovel->id = id;
-//     imovel->numero = numero;
-//     imovel->precoTotal = precoTotal;
-//     imovel->precoMetroQ = precoMetroQ;
-//     imovel->latitude = latitude;
-//     imovel->longitude = longitude;
-// }
-
 void Imovel_print(Imovel* imovel){
     printf("ID: %u\n", imovel->id);
     printf("Bairro: %s\n", imovel->bairro);
@@ -90,10 +74,76 @@ void Imovel_from_json(Imovel* imovel, const char* json) {
     sscanf(json, "{\"id\": %u, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
 }
 
-// void test_imovel(const char* json, const int client_socket) {
-//     Imovel imovel;
-//     Imovel_from_json(&imovel, json);
-//     Imovel_print(&imovel);
-// }
+// imv ----------------------------------------------------------------------------------------------------------------------------
 
-// test
+typedef struct {
+    int id;                             // ID único do imóvel
+    int numero;                        // Número do imóvel (pode ser vazio, -1 se não informado)
+
+    double precoTotal;               // Preço total do imóvel
+    double precoMetroQ;             // Preço por metro quadrado
+    double latitude;               // Latitude do imóvel
+    double longitude;             // Longitude do imóvel
+
+    char cep[9];                // CEP do imóvel
+
+    char* descricao;          // Descrição do imóvel
+    char* bairro;            // Bairro do imóvel
+    char* tipo;             // Tipo do imóvel (ex.: "casa", "apartamento")
+    char* rua;             // Rua do imóvel (pode estar vazia)
+} IMV;
+
+void IMV_print(IMV* imv){
+    printf("ID: %u\n", imv->id);
+    printf("Bairro: %s\n", imv->bairro);
+    printf("Tipo: %s\n", imv->tipo);
+    printf("Rua: %s\n", imv->rua);
+    printf("Número: %d\n", imv->numero);
+    printf("Preço total: %f\n", imv->precoTotal);
+    printf("Preço por metro quadrado: %f\n", imv->precoMetroQ);
+    printf("Descrição: %s\n", imv->descricao);
+    printf("CEP: %s\n", imv->cep);
+    printf("Latitude: %f\n", imv->latitude);
+    printf("Longitude: %f\n", imv->longitude);
+}
+
+void IMV_to_json(IMV* imv, char* json) {
+    sprintf(json, "{\"id\": %u, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imv->id, imv->bairro, imv->tipo, imv->rua, imv->numero, imv->precoTotal, imv->precoMetroQ, imv->descricao, imv->cep, imv->latitude, imv->longitude);
+}
+
+IMV* IMV_from_Imovel(Imovel* imovel){
+    IMV* imv = falloc(sizeof(IMV));
+    imv->id = imovel->id;
+    imv->numero = imovel->numero;
+    imv->precoTotal = imovel->precoTotal;
+    imv->precoMetroQ = imovel->precoMetroQ;
+    imv->latitude = imovel->latitude;
+    imv->longitude = imovel->longitude;
+    strncpy(imv->cep, imovel->cep, 9);
+
+    u_int32_t len = strlen(imovel->descricao);
+    imv->descricao = falloc(len + 1);
+    strcpy(imv->descricao, imovel->descricao);
+
+    len = strlen(imovel->bairro);
+    imv->bairro = falloc(len + 1);
+    strcpy(imv->bairro, imovel->bairro);
+
+    len = strlen(imovel->tipo);
+    imv->tipo = falloc(len + 1);
+    strcpy(imv->tipo, imovel->tipo);
+
+    len = strlen(imovel->rua);
+    imv->rua = falloc(len + 1);
+    strcpy(imv->rua, imovel->rua);
+
+    return imv;
+}
+
+void IMV_free(IMV* a) {
+    falloc_free(a->descricao);
+    falloc_free(a->bairro);
+    falloc_free(a->tipo);
+    falloc_free(a->rua);
+    falloc_free(a);
+}

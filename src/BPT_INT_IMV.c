@@ -7,7 +7,7 @@
 
 typedef struct IntImv {
     int data;
-    Imovel* imv;
+    IMV* imv;
 } INT_IMV;
 
 // Int functions -=-
@@ -49,14 +49,12 @@ BPT_INT_IMV* BPT_INT_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, Imovel* imv) {
-    INT_IMV int_imv;
-    int_imv.data = data;
-    int_imv.imv = imv;
+BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, IMV* imv) {
+    INT_IMV int_imv = {data, imv};
     return TARVBMG_busca(a, &int_imv, BPT_INT_IMV_menor_que);
 }
 
-BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, Imovel* imv, const int t) {
+BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
@@ -67,7 +65,7 @@ BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, Imovel* imv, con
     return TARVBMG_insere(T, data_ptr, t, BPT_INT_IMV_menor_que);
 }
 
-BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, Imovel* imv, const int t) {
+BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
