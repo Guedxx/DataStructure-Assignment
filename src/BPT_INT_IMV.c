@@ -30,6 +30,10 @@ void BPT_INT_IMV_imprime_chave(void* a) {
     const INT_IMV* a1 = a;
     printf("%d ", a1->data);
 }
+void BPT_INT_IMV_imprime_pnt(void* a) {
+    const INT_IMV* a1 = a;
+    printf("%p, ", a1->imv);
+}
 void BPT_INT_IMV_imprime_chave_json(void* a, char* buffer) {
     const INT_IMV* a1 = a;
     char buffer2[20];
@@ -88,6 +92,10 @@ void BPT_INT_IMV_imprime_chaves(BPT_INT_IMV* a) {
 
 void BPT_INT_IMV_json(BPT_INT_IMV* a, char* buffer) {
     TARVBMG_json(a, buffer, BPT_INT_IMV_imprime_chave_json);
+}
+
+void BPT_INT_IMV_map(BPT_INT_IMV* a, void(*map)(void*)) {
+    TARVBMG_map(a, map);
 }
 
 void BPT_INT_IMV_map_range_2(BPT_INT_IMV* a, const int min, const int max, void(*map)(void*, void*), void* arg) {

@@ -194,7 +194,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
 
   // if((i < arv->nchaves) && (ch == arv->chave[i]) && (arv->folha)){ //CASO 1
   if((i < arv->nchaves) && EQ(data, arv->chaves[i]) && arv->folha){   //CASO 1
-    printf("\nCASO 1\n");
+    //printf("\nCASO 1\n");
     falloc_free(arv->chaves[i]);
     for(int j = i; j<arv->nchaves-1;j++) arv->chaves[j] = arv->chaves[j+1];
     arv->nchaves--;
@@ -210,14 +210,15 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
   TARVBMG *y = arv->filhos[i], *z = NULL;
   if (y->nchaves == t-1){ //CASOS 3A e 3B
     if((i < arv->nchaves) && (arv->filhos[i+1]->nchaves >=t)){ //CASO 3A
-      printf("\nCASO 3A: i menor que nchaves\n");
+      //printf("\nCASO 3A: i menor que nchaves\n");
       z = arv->filhos[i+1];
       if(!y->folha){
         y->chaves[t-1] = arv->chaves[i];   //dar a y a chave i da arv
         arv->chaves[i] = z->chaves[0];     //dar a arv uma chave de z
       }
       else{
-        arv->chaves[i] = z->chaves[0] + 1;
+        //arv->chaves[i] = z->chaves[0] + 1; // todo pq mais 1?
+        arv->chaves[i] = z->chaves[0];
         y->chaves[t-1] = z->chaves[0];
       }
       y->nchaves++;
@@ -234,7 +235,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
       return arv;
     }
     if((i > 0) && (arv->filhos[i-1]->nchaves >= t)){ //CASO 3A
-      printf("\nCASO 3A: i igual a nchaves\n");
+      //printf("\nCASO 3A: i igual a nchaves\n");
       z = arv->filhos[i-1];
       int j;
       for(j = y->nchaves; j>0; j--)               //encaixar lugar da nova chave
@@ -261,7 +262,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
     }
     //CASO 3B
     if(i < arv->nchaves && arv->filhos[i+1]->nchaves == t-1){
-      printf("\nCASO 3B: i menor que nchaves\n");
+      //printf("\nCASO 3B: i menor que nchaves\n");
       z = arv->filhos[i+1];
       if(!y->folha){
         y->chaves[t-1] = arv->chaves[i];//pegar chave [i] e coloca ao final de filho[i]
@@ -283,7 +284,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
         //TARVBMG_libera(z); 07/2024
       }
       TARVBMG_libera(z); // 07/2024
-      for(j=i; j < arv->nchaves-1; j++){ //limpar referências de i
+      for(j=i; j < arv->nchaves-1; j++){ // limpar referências de i
         arv->chaves[j] = arv->chaves[j+1];
         arv->filhos[j+1] = arv->filhos[j+2];
       }
@@ -300,7 +301,7 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
       return arv;
     }
     if((i > 0) && (arv->filhos[i-1]->nchaves == t-1)){
-      printf("\nCASO 3B: i igual a nchaves\n");
+      //printf("\nCASO 3B: i igual a nchaves\n");
       z = arv->filhos[i-1];
       if(!y->folha){
         if(i == arv->nchaves){

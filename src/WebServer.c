@@ -112,10 +112,9 @@ void handle_request(const int client_socket) {
     if (n <= 0) return;
     buffer[n] = '\0';
 
-    #ifdef DEBUG
-    // Usando write no lugar de printf para evitar problemas com concorrência
-    write(STDOUT_FILENO, "Requisição recebida:\n", 21);
-    write(STDOUT_FILENO, buffer, n);
+    #ifdef DEBUG_WEB3
+        write(STDOUT_FILENO, "Requisição recebida:\n", 21);
+        write(STDOUT_FILENO, buffer, n);
     #endif
 
     char* strtok_r_buf;
@@ -141,7 +140,8 @@ void handle_request(const int client_socket) {
 
         ADD_POST("/submit_imovel", submit_imovel);
         ADD_POST_A("/search_imoveis", search_imoveis);
-        ADD_POST_A("/delete_imovel", delete_imovel);
+        ADD_POST("/delete_imovel", delete_imovel);
+
     }
 
     else {

@@ -2,6 +2,37 @@
 
 Este projeto faz parte do **Trabalho Computacional de Estruturas de Dados e Seus Algoritmos**. Ele consiste no desenvolvimento de um sistema de gerenciamento de imóveis usando uma **Árvore B** ou **B+** em memória secundária.
 
+## Integrantes
+Nathan Pinheiro && Pedro Guedes && Arthur Ertal
+
+## Instruções de Compilação
+Clone o repositório com o comando:
+```bash
+git clone https://github.com/Guedxx/DataStructure-Assignment.git
+```
+Acesse o diretório do projeto com o comando:
+```bash
+cd DataStructure-Assignment
+```
+Complie o código-fonte com o comando:
+```bash
+gcc -o main src/main.c
+```
+Se você deseja ver as mensagens de debug da web, compile com:
+```bash
+gcc -o main src/main.c -DDEBUG_WEB1
+```
+Debug tags:
+```angular2html
+DEBUG_WEB1 - Apenas o resultado da chamada.
+DEBUG_WEB2 - Apenas o resultado da chamada e json recebido.
+DEBUG_WEB3 - Apenas o resultado da chamada, json recebido e todo o request recebido.
+```
+Execute o programa com:
+```bash
+./main
+```
+
 ## Descrição do Projeto
 
 O sistema permitirá o gerenciamento de um catálogo de imóveis do Rio de Janeiro, suportando operações de inserção, consulta, modificação e exclusão de imóveis, com os dados armazenados de forma eficiente usando estruturas de árvore. 

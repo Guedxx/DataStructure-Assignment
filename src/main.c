@@ -69,8 +69,25 @@ int main() {
     }
     printf("]\n");
 
-    // printf("Usuário, qual árvore deseja acessar?\n Escreva o ponteiro da arvore mostrado acima: ");
-    // scanf("%p", &imoveis);
+    if (imoveis_list->len == 0) {
+        printf("Nenhuma árvore encontrada. Criando nova árvore...\nEntre com o T: ");
+        int t;
+        scanf("%d", &t);
+        BPT_IMV* new_imv = BPT_IMV_cria(t);
+        const IMV_TREE_P_T new_imv_t = {t, new_imv};
+        TL_push(imoveis_list, &new_imv_t);
+        printf("Nova árvore criada com sucesso.\n(%p)\n", new_imv);
+        imoveis = new_imv;
+        imoveis_t = t;
+    } else if (imoveis_list->len == 1) {
+        const IMV_TREE_P_T* imv = TL_get(imoveis_list, 0);
+        printf("Uma única árvore encontrada. Usando ela.\n(%p)\n", imv->imoveis);
+        imoveis = imv->imoveis;
+        imoveis_t = imv->t;
+    } else {
+        printf("Usuário, qual árvore deseja acessar?\n Escreva o ponteiro da arvore mostrado acima: ");
+        scanf("%p", &imoveis);
+    }
 
     pthread_t thread_id;
     start_web_server_args args;
@@ -187,6 +204,10 @@ int main() {
         }
         else if (strncmp(buf, "free", 4) == 0) {
             printf("Espaço livre: %d\n", falloc_free_size());
+        }
+        else if (strncmp(buf, "ptr", 3) == 0) {
+            BPT_INT_IMV_map(imoveis->id, BPT_INT_IMV_imprime_pnt);
+            printf("\n");
         }
         else {
             printf("Comando não reconhecido.\n");

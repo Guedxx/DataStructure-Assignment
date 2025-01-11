@@ -83,6 +83,7 @@ function renderResults(imoveis) {
                 <p>Bairro: ${imovel.bairro}</p>
                 <p>Tipo: ${imovel.tipo}</p>
                 <p>Rua: ${imovel.rua}</p>
+                <p>CEP: ${imovel.cep}</p>
                 <p>Número: ${imovel.numero}</p>
                 <p>Preço Total: ${imovel.precoTotal}</p>
                 <p>Preço metro quadrado: ${imovel.precoMetroQ}</p>
@@ -92,9 +93,11 @@ function renderResults(imoveis) {
                     <h2>Descrição:</h2>
                     <p>${imovel.descricao}</p>
                 </div>
-                <button onclick="deleteImovel(${imovel.id})">Deletar</button>
+                <button onclick="deleteImovel(${imovel.id})">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ED1C24"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                </button>
             `;
-
+            imovelDiv.id = `imovel-${imovel.id}`;
             resultsContainer.appendChild(imovelDiv);
         });
     } else {
@@ -103,39 +106,39 @@ function renderResults(imoveis) {
     }
 }
 
-function deleteAll(){
-    // todo
-    fetch(`/delete_all`, {
-        method: 'DELETE',
-    }).then(response => {
-        if (response.ok) {
-            alert('Todos os imóveis foram apagados.');
-            document.getElementById('results').innerHTML = '';
-            this.style.display = 'none';
-        } else {
-            alert('Erro ao apagar todos os imóveis.');
-        }
-    }).catch(error => console.error('Erro:', error));
+async function deleteAll(){
+    const imovel_divs = document.getElementsByClassName('imovel_s');
+    const ids = [];
+
+    for (const imovel_div of imovel_divs) {
+        const id = imovel_div.id.split('-')[1];
+        ids.push(parseInt(id));
+    }
+
+
+    for (const id of ids) {
+        await deleteImovel(id);
+        await new Promise(r => setTimeout(r, 3));
+    }
+    document.getElementById('results').innerHTML = '<p>Todos os imóveis foram deletados.</p>';
 }
 
-function deleteImovel(id) {
-    fetch(`/delete_imovel`, {
+async function deleteImovel(id) {
+    const response = await fetch(`/delete_imovel`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({id: id})
-    }).then(response => {
-        if (response.ok) {
-            alert(`Imóvel ID ${id} apagado com sucesso.`);
-            document.querySelector(`.imovel-item button[onclick="deleteImovel(${id})"]`).parentElement.remove();
-            if (document.querySelectorAll('.imovel-item').length === 0) {
-                document.getElementById('deleteAllButton').style.display = 'none';
-            }
-        } else {
-            alert(`Erro ao apagar o imóvel ID ${id}.`);
-        }
-    }).catch(error => console.error('Erro:', error));
+    });
+
+    if (response.ok) {
+        console.log('Imóvel deletado com sucesso!');
+        // Remove the element from the page
+        document.getElementById(`imovel-${id}`).remove();
+    } else {
+        console.log('Erro ao deletar imóvel.');
+    }
 }
 
 

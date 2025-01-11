@@ -4,20 +4,54 @@
 #include "BPT_IMV.c"
 
 
+void set_imv_id(void* v, void* id) {
+    INT_IMV* int_imv = v;
+    IMV** id2imv = id;
+    *id2imv = int_imv->imv;
+}
+
+
 void submit_imovel(const char* json) {
+    #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+        printf("/submit_imovel ");
+        printf("Recebido JSON:\n%s\n", json);
+    #endif
+
+
     Imovel imovel;
     Imovel_from_json(&imovel, json);
 
-    #ifdef DEBUG
-    Imovel_print(imovel);
+    #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+        printf("Adicionando imovel\n");
+        Imovel_print(&imovel);
     #endif
 
     IMV* imv = IMV_from_Imovel(&imovel);
     BPT_IMV_insere(imoveis, imv, imoveis_t);
 }
 
-void delete_imovel(const char* json, const int client_socket) {
-    SEND_JSON("{}");
+void delete_imovel(const char* json) {
+    #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+        printf("/delete_imovel ");
+        printf("Recebido JSON:\n%s\n", json);
+    #endif
+
+    char buffer[128];
+    if (!extract_json_value(json, "id", buffer, sizeof(buffer))) {
+        return;
+    }
+    int id = atoi(buffer);
+    IMV* imv = NULL;
+    BPT_INT_IMV_map_range_2(imoveis->id, id, id, set_imv_id, &imv);
+
+    #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+        printf("Removendo imovel com id %d\n", id);
+        IMV_print(imv);
+    #endif
+
+    if (imv) {
+        BPT_IMV_remove(imoveis, imv, imoveis_t);
+    }
 }
 
 
@@ -160,15 +194,10 @@ void filter(IMV** list1, IMV** list2) {
     ((uint64_t*) list1 -1)[0] = len1;
 }
 
-void set_imv_id(void* v, void* id) {
-    INT_IMV* int_imv = v;
-    IMV** id2imv = id;
-    *id2imv = int_imv->imv;
-}
-
 void search_imoveis(const char* json, const int client_socket) {
-    #ifdef DEBUG
-    printf("Searching imoveis...\n");
+    #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+        printf("/search_imoveis ");
+        printf("Recebido JSON:\n%s\n", json);
     #endif
     ImovelSearch imv_s;
     ImovelSearch_from_json(&imv_s, json);
@@ -184,11 +213,19 @@ void search_imoveis(const char* json, const int client_socket) {
             SEND_JSON(buffer);
         }
         else {
-            #ifdef DEBUG
-            printf("Imovel não encontrado\n");
-            #endif
             SEND_JSON("[]");
         }
+
+        #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+            if (imv) {
+                printf("Encontrado imovel com id %d\n", imv_s.id);
+                IMV_print(imv);
+            }
+            else {
+                printf("Imovel com id %d não encontrado\n", imv_s.id);
+            }
+        #endif
+
         return;
     }
 
@@ -290,5 +327,17 @@ void search_imoveis(const char* json, const int client_socket) {
         }
     }
     strcat(buffer, "]");
+
+    #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
+        printf("Encontrados %lu imoveis\n[", ((uint64_t*)imv_list1)[0]);
+        for (int i = 1; i <= ((uint64_t*)imv_list1)[0]; i++) {
+            printf("%d", imv_list1[i]->id);
+            if (i != ((uint64_t*)imv_list1)[0]) {
+                printf(", ");
+            }
+        }
+        printf("]\n");
+    #endif
+
     SEND_JSON(buffer);
 }

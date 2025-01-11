@@ -31,7 +31,7 @@ void Imovel_print(Imovel* imovel){
     printf("Longitude: %f\n", imovel->longitude);
 }
 
-void Imovel_from_string(Imovel* imovel, char* str){
+void Imovel_from_string(Imovel* imovel, char* str) {
     char* token = strtok(str, ";");
     imovel->id = atoi(token);
 
@@ -71,7 +71,7 @@ void Imovel_to_json(Imovel* imovel, char* json) {
 }
 
 void Imovel_from_json(Imovel* imovel, const char* json) {
-    sscanf(json, "{\"id\": %u, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
+    sscanf(json, "{\"id\": %u, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %lf, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
 }
 
 // imv ----------------------------------------------------------------------------------------------------------------------------
@@ -93,7 +93,11 @@ typedef struct {
     char* rua;             // Rua do imóvel (pode estar vazia)
 } IMV;
 
-void IMV_print(IMV* imv){
+void IMV_print(IMV* imv) {
+    if (imv == NULL) {
+        printf("Imóvel é nulo\n");
+        return;
+    }
     printf("ID: %u\n", imv->id);
     printf("Bairro: %s\n", imv->bairro);
     printf("Tipo: %s\n", imv->tipo);
@@ -108,10 +112,14 @@ void IMV_print(IMV* imv){
 }
 
 void IMV_to_json(IMV* imv, char* json) {
+    if (imv == NULL) {
+        sprintf(json, "{}");
+        return;
+    }
     sprintf(json, "{\"id\": %u, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imv->id, imv->bairro, imv->tipo, imv->rua, imv->numero, imv->precoTotal, imv->precoMetroQ, imv->descricao, imv->cep, imv->latitude, imv->longitude);
 }
 
-IMV* IMV_from_Imovel(Imovel* imovel){
+IMV* IMV_from_Imovel(Imovel* imovel) {
     IMV* imv = falloc(sizeof(IMV));
     imv->id = imovel->id;
     imv->numero = imovel->numero;
