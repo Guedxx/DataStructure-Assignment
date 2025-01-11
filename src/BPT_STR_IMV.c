@@ -16,6 +16,14 @@ char BPT_STR_IMV_menor_que(void* a, void* b) {
     const STR_IMV* a1 = a;
     const STR_IMV* b1 = b;
 
+    // gambiarra
+    while (a1->data > (void*)0x800000000000 || a1->imv > (void*)0x800000000000) {
+        a1 = (STR_IMV*) ((char*) a1 - 1);
+    }
+    while (b1->data > (void*)0x800000000000 || b1->imv > (void*)0x800000000000) {
+        b1 = (STR_IMV*) ((char*) b1 - 1);
+    }
+
     const int cmp = strncmp(a1->data, b1->data, a1->len < b1->len ? a1->len : b1->len);
     if (cmp < 0) {
         return true;
@@ -30,10 +38,22 @@ char BPT_STR_IMV_menor_que(void* a, void* b) {
 }
 void BPT_STR_IMV_imprime_chave(void* a) {
     const STR_IMV* a1 = a;
+
+    // gambiarra
+    if (a1->data > (void*)0x800000000000 || a1->imv > (void*)0x800000000000) {
+        a1 = (STR_IMV*) ((char*) a1 - 1);
+    }
+
     printf("%.*s ", a1->len, a1->data);
 }
 void BPT_STR_IMV_imprime_chave_json(void* a, char* buffer) {
     const STR_IMV* a1 = a;
+
+    // gambiarra
+    while (a1->data > (void*)0x800000000000 || a1->imv > (void*)0x800000000000) {
+        a1 = (STR_IMV*) ((char*) a1 - 1);
+    }
+
     while (!*buffer) buffer++;
     sprintf(buffer, "\"%.*s\"", a1->len, a1->data);
 }
@@ -74,6 +94,10 @@ BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, cons
     return TARVBMG_insere(T, key, t, BPT_STR_IMV_menor_que);
 }
 
+void BPT_STR_IMV_imprime(const BPT_STR_IMV* a) {
+    TARVBMG_imprime(a, BPT_STR_IMV_imprime_chave);
+}
+
 BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
@@ -86,15 +110,13 @@ BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, IMV* imv, co
         .imv = imv
     };
 
-    return TARVBMG_retira(arv, &key, t, BPT_STR_IMV_menor_que);
+    BPT_STR_IMV* ret = TARVBMG_retira(arv, &key, t, BPT_STR_IMV_menor_que);
+    BPT_STR_IMV_imprime(ret);
+    return ret;
 }
 
 void BPT_STR_IMV_libera(BPT_STR_IMV* a) {
     TARVBMG_libera(a);
-}
-
-void BPT_STR_IMV_imprime(const BPT_STR_IMV* a) {
-    TARVBMG_imprime(a, BPT_STR_IMV_imprime_chave);
 }
 
 void BPT_STR_IMV_imprime_chaves(BPT_STR_IMV* a) {
