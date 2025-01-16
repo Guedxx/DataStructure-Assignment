@@ -16,7 +16,6 @@ typedef struct {
 char BPT_INT_IMV_menor_que(void* a, void* b) {
     const INT_IMV* a1 = a;
     const INT_IMV* b1 = b;
-    printf("pato a: %d, pato b: %d\n", a1->pato, b1->pato);
 
     if (a1->data < b1->data) {
         return true;

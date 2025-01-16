@@ -38,6 +38,7 @@ TARVBMG *TARVBMG_busca(TARVBMG *a, CHAVE data, char (*menor_que)(void*, void*)){
 
   // while ((i < a->nchaves) && (mat > a->chave[i])) i++;
   while ((i < a->nchaves) && GT(&data, &a->chaves[i])) i++;
+  if ((i < a->nchaves) && EQ(&data, &a->chaves[i])) return a;
 
   // if ((i < a->nchaves) && (a->folha) && (mat == a->chave[i])) return a;
   if ((i < a->nchaves) && (a->folha) && EQ(&data, &a->chaves[i])) return a;
@@ -187,10 +188,14 @@ TARVBMG *TARVBMG_insere(TARVBMG *T, CHAVE data, int t, char (*menor_que)(void*, 
 
 TARVBMG* remover(TARVBMG* arv, CHAVE data, int t, char (*menor_que)(void*, void*)) {
   if(!arv) return arv;
-  int i;
+  int i = 0;
 
   // for(i = 0; i < arv->nchaves && arv->chave[i] < ch; i++);
-  for (i = 0; i < arv->nchaves && LT(&arv->chaves[i], &data); i++) {}
+  // for (i = 0; i < arv->nchaves && LT(&arv->chaves[i], &data); i++) {}
+  // Localiza a posição onde `data` se encaixaria ou está localizada
+  while (i < arv->nchaves && GT(&data, &arv->chaves[i])) {
+    i++;
+  }
 
   // if((i < arv->nchaves) && (ch == arv->chave[i]) && (arv->folha)){ //CASO 1
   if((i < arv->nchaves) && EQ(&data, &arv->chaves[i]) && arv->folha){   //CASO 1
@@ -217,7 +222,7 @@ TARVBMG* remover(TARVBMG* arv, CHAVE data, int t, char (*menor_que)(void*, void*
       }
       else{
         //arv->chaves[i] = z->chaves[0] + 1;                       // pq mais 1? descobri já
-        arv->chaves[i] = z->chaves[0];  //arv->chaves[i].pato++;     // (*(int*)arv->chaves[i])++; // Este é o +1.
+        arv->chaves[i] = z->chaves[0];  arv->chaves[i].pato++;     // (*(int*)arv->chaves[i])++; // Este é o +1.
         y->chaves[t-1] = z->chaves[0];
       }
       y->nchaves++;
