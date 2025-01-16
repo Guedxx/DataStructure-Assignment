@@ -5,9 +5,10 @@
 //#include "TImoveis.c"
 #include "TARVBMG.c"
 
-typedef struct strImv {
+typedef struct {
+    int pato;
+    int id;
     IMV* imv;
-    uint32_t len;
     char* data;
 } STR_IMV;
 
@@ -16,27 +17,28 @@ char BPT_STR_IMV_menor_que(void* a, void* b) {
     const STR_IMV* a1 = a;
     const STR_IMV* b1 = b;
 
-    const int cmp = strncmp(a1->data, b1->data, a1->len < b1->len ? a1->len : b1->len);
+    const int cmp = strcmp(a1->data, b1->data);
     if (cmp < 0) {
         return true;
     }
     if (cmp == 0) {
-        if (a1->imv == NULL || b1->imv == NULL) {
-            return 2;
+        //return a1->id < b1->id;
+        if (a1->id == b1->id || a1->id == -1 || b1->id == -1) {
+            return a1->pato == b1->pato ? 2 : a1->pato < b1->pato;
         }
-        return a1->imv->id < b1->imv->id;
+        return a1->id < b1->id;
     }
     return false;
 }
 void BPT_STR_IMV_imprime_chave(void* a) {
     const STR_IMV* a1 = a;
-    printf("%.*s ", a1->len, a1->data);
+    printf("%s", a1->data);
 }
 void BPT_STR_IMV_imprime_chave_json(void* a, char* buffer) {
     const STR_IMV* a1 = a;
 
     while (!*buffer) buffer++;
-    sprintf(buffer, "\"%.*s\"", a1->len, a1->data);
+    sprintf(buffer, "\"%s\"", a1->data);
 }
 // Str functions -=-
 
@@ -51,14 +53,15 @@ BPT_STR_IMV* BPT_STR_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, const char* data, IMV* imv) {
-    STR_IMV key_ptr = {
-        .len = strlen(data),
-        .data = (char*) data,
-        .imv = imv
+BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, char* data, IMV* imv) {
+    CHAVE key = {
+        .data = (intptr_t) data,
+        .imv = imv,
+        .pato = 0,
+        .id = imv->id
     };
 
-    return TARVBMG_busca(a, &key_ptr, BPT_STR_IMV_menor_que);
+    return TARVBMG_busca(a, key, BPT_STR_IMV_menor_que);
 }
 
 BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, const int t) {
@@ -67,10 +70,12 @@ BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, cons
         return NULL;
     }
 
-    STR_IMV* key = falloc(sizeof(STR_IMV));
-    key->len = strlen(data);
-    key->data = (char*) data;
-    key->imv = imv;
+    CHAVE key = {
+        .data = (intptr_t) data,
+        .imv = imv,
+        .pato = 0,
+        .id = imv->id
+    };
 
     return TARVBMG_insere(T, key, t, BPT_STR_IMV_menor_que);
 }
@@ -85,13 +90,14 @@ BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, IMV* imv, co
         return NULL;
     }
 
-    STR_IMV key = {
-        .len = strlen(data),
-        .data = (char*) data,
-        .imv = imv
+    CHAVE key = {
+        .data = (intptr_t) data,
+        .imv = imv,
+        .pato = 0,
+        .id = imv->id
     };
 
-    return TARVBMG_retira(arv, &key, t, BPT_STR_IMV_menor_que);
+    return TARVBMG_retira(arv, key, t, BPT_STR_IMV_menor_que);
 }
 
 void BPT_STR_IMV_libera(BPT_STR_IMV* a) {
@@ -107,21 +113,19 @@ void BPT_STR_IMV_json(BPT_STR_IMV* a, char* buffer) {
 }
 
 void BPT_STR_IMV_map_range_2(BPT_STR_IMV* a, const char* min, const char* max, void(*map)(void*, void*), void* arg) {
-    const uint32_t min_len = strlen(min);
-    const uint32_t max_len = strlen(max);
-
-    STR_IMV min_key = {
-        .len = min_len,
-        .data = (char*) min,
-        .imv = NULL
+    CHAVE min_key = {
+        .data = (intptr_t) min,
+        .imv = NULL,
+        .pato = 0,
+        .id = -1
     };
-    STR_IMV max_key = {
-        .len = max_len,
-        .data = (char*) max,
-        .imv = NULL
+    CHAVE max_key = {
+        .data = (intptr_t) max,
+        .imv = NULL,
+        .pato = 0,
+        .id = -1
     };
-
-    TARVBMG_map_range_2(a, &min_key, &max_key, BPT_STR_IMV_menor_que, map, arg);
+    TARVBMG_map_range_2(a, min_key, max_key, BPT_STR_IMV_menor_que, map, arg);
 }
 
 

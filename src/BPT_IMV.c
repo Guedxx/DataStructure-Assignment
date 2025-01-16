@@ -115,10 +115,10 @@ IMV* BPT_IMV_busca_id(const BPT_IMV* a, const int id) {
     if (!b) return NULL;
 
     int i = 0;
-    const INT_IMV* imv = b->chaves[i];
+    const INT_IMV* imv = (INT_IMV*) &b->chaves[i];
     while (imv->data != id) {
         i++;
-        imv = b->chaves[i];
+        imv = (INT_IMV*) &b->chaves[i];
     }
 
     return imv->imv;
