@@ -5,9 +5,11 @@
 //#include "TImoveis.c"
 #include "TARVBMG.c"
 
-typedef struct DubImv {
-    double data;
+typedef struct {
+    int pato;
+    int id;
     IMV* imv;
+    double data;
 } DUB_IMV;
 
 // Dub functions -=-
@@ -19,10 +21,11 @@ char BPT_DUB_IMV_menor_que(void* a, void* b) {
         return true;
     }
     if (a1->data == b1->data) {
-        if (a1->imv == NULL || b1->imv == NULL) {
-            return 2;
+        //return a1->imv->id < b1->imv->id;
+        if (a1->id == b1->id || a1->id == -1 || b1->id == -1) {
+            return a1->pato == b1->pato ? 2 : a1->pato < b1->pato;
         }
-        return a1->imv->id < b1->imv->id;
+        return a1->id < b1->id;
     }
     return false;
 }
@@ -50,10 +53,13 @@ BPT_DUB_IMV* BPT_DUB_IMV_inicializa() {
 }
 
 BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data, IMV* imv) {
-    DUB_IMV dub_imv;
-    dub_imv.data = data;
-    dub_imv.imv = imv;
-    return TARVBMG_busca(a, &dub_imv, BPT_DUB_IMV_menor_que);
+    CHAVE dub_imv = {
+        0,
+        imv ? imv->id : -1,
+        imv
+    };
+    memcpy(&dub_imv.data, &data, sizeof(double));
+    return TARVBMG_busca(a, dub_imv, BPT_DUB_IMV_menor_que);
 }
 
 BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, IMV* imv, const int t) {
@@ -61,10 +67,13 @@ BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, IMV* imv, con
         perror("Imovel nulo");
         return NULL;
     }
-    DUB_IMV* data_ptr = falloc(sizeof(DUB_IMV));
-    data_ptr->data = data;
-    data_ptr->imv = imv;
-    return TARVBMG_insere(T, data_ptr, t, BPT_DUB_IMV_menor_que);
+    CHAVE dub_imv = {
+        .pato = 0,
+        .id = imv->id,
+        .imv = imv
+    };
+    memcpy(&dub_imv.data, &data, sizeof(double));
+    return TARVBMG_insere(T, dub_imv, t, BPT_DUB_IMV_menor_que);
 }
 
 BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, IMV* imv, const int t) {
@@ -72,10 +81,13 @@ BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, IMV* imv, const i
         perror("Imovel nulo");
         return NULL;
     }
-    DUB_IMV dub_imv;
-    dub_imv.data = data;
-    dub_imv.imv = imv;
-    return TARVBMG_retira(arv, &dub_imv, t, BPT_DUB_IMV_menor_que);
+    CHAVE dub_imv = {
+        .pato = 0,
+        .id = imv->id,
+        .imv = imv
+    };
+    memcpy(&dub_imv.data, &data, sizeof(double));
+    return TARVBMG_retira(arv, dub_imv, t, BPT_DUB_IMV_menor_que);
 }
 
 void BPT_DUB_IMV_libera(BPT_DUB_IMV *a) {
@@ -95,7 +107,9 @@ void BPT_DUB_IMV_json(BPT_DUB_IMV* a, char* buffer) {
 }
 
 void BPT_DUB_IMV_map_range_2(BPT_DUB_IMV* a, double min, double max, void(*map)(void*, void*), void* arg) {
-    DUB_IMV min_imv = {min, NULL};
-    DUB_IMV max_imv = {max, NULL};
-    TARVBMG_map_range_2(a, &min_imv, &max_imv, BPT_DUB_IMV_menor_que, map, arg);
+    CHAVE min_imv = {0, -1, NULL };
+    CHAVE max_imv = {0, -1, NULL };
+    memcpy(&min_imv.data, &min, sizeof(double));
+    memcpy(&max_imv.data, &max, sizeof(double));
+    TARVBMG_map_range_2(a, min_imv, max_imv, BPT_DUB_IMV_menor_que, map, arg);
 }

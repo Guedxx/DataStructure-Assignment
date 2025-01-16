@@ -5,9 +5,9 @@
 TARVBMG *TARVBMG_cria(const int t){
   TARVBMG* novo = (TARVBMG*) falloc(sizeof(TARVBMG));
   novo->nchaves = 0;
-  novo->chaves = (void**) falloc(sizeof(void*)*((t*2)-1));
+  novo->chaves = (CHAVE*) falloc(sizeof(CHAVE)*((t*2)-1));
   novo->folha = 1;
-  novo->filhos = (TARVBMG**)falloc(sizeof(TARVBMG*)*t*2);
+  novo->filhos = (TARVBMG**) falloc(sizeof(TARVBMG*)*t*2);
   novo->prox = NULL;
   for(int i = 0; i<(t*2); i++) novo->filhos[i] = NULL;
   return novo;
@@ -24,28 +24,28 @@ void TARVBMG_libera(TARVBMG *a){
       for(int i = 0; i <= a->nchaves; i++) TARVBMG_libera(a->filhos[i]);
     }
     falloc_free(a->filhos);
-    for (int i = 0; i < a->nchaves; i++) {
-      falloc_free(a->chaves[i]);
-    }
+    // for (int i = 0; i < a->nchaves; i++) {
+    //   falloc_free(a->chaves[i]);
+    // }
     falloc_free(a->chaves);
     falloc_free(a);
   }
 }
 
-TARVBMG *TARVBMG_busca(TARVBMG *a, void* data, char (*menor_que)(void*, void*)){
+TARVBMG *TARVBMG_busca(TARVBMG *a, CHAVE data, char (*menor_que)(void*, void*)){
   if (!a) return NULL;
   int i = 0;
 
   // while ((i < a->nchaves) && (mat > a->chave[i])) i++;
-  while ((i < a->nchaves) && GT(data, a->chaves[i])) i++;
+  while ((i < a->nchaves) && GT(&data, &a->chaves[i])) i++;
 
   // if ((i < a->nchaves) && (a->folha) && (mat == a->chave[i])) return a;
-  if ((i < a->nchaves) && (a->folha) && EQ(data, a->chaves[i])) return a;
+  if ((i < a->nchaves) && (a->folha) && EQ(&data, &a->chaves[i])) return a;
 
   if (a-> folha) return NULL;
 
   // if (a->chave[i] == mat) i++; // Nathan acha que tem undefined behavior neste código da rosset, testar depois
-  if ((i < a->nchaves) && EQ(data, a->chaves[i])) i++;
+  if ((i < a->nchaves) && EQ(&data, &a->chaves[i])) i++;
 
   return TARVBMG_busca(a->filhos[i], data, menor_que);
 }
@@ -57,7 +57,7 @@ void TARVBMG_imprime_chaves(TARVBMG *a, void(*imprime)(void*)){
   while(p->filhos[0]) p = p->filhos[0];
   while(p){
     // for(i = 0; i < p->nchaves; i++) printf("%d ", p->chave[i]);
-    for(int i = 0; i < p->nchaves; i++) imprime(p->chaves[i]);
+    for(int i = 0; i < p->nchaves; i++) imprime(&p->chaves[i]);
 
     p = p->prox;
   }
@@ -76,7 +76,7 @@ void imp(const TARVBMG *a, const int andar, void(*imprime)(void*)){
 
       // printf("%d\n", a->chave[i]);
       // imp(a->filho[i],andar+1);
-      imprime(a->chaves[i]); printf("\n");
+      imprime(&a->chaves[i]); printf("\n");
       imp(a->filhos[i+1],andar+1, imprime);
     }
   }
@@ -131,11 +131,11 @@ TARVBMG *divisao(TARVBMG *x, int i, TARVBMG* y, int t) {
 }
 
 
-TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, char (*menor_que)(void*, void*)) {
+TARVBMG *insere_nao_completo(TARVBMG *x, CHAVE data, int t, char (*menor_que)(void*, void*)) {
   int i = x->nchaves-1;
   if(x->folha){
     // while((i>=0) && (mat < x->chave[i])){
-    while((i>=0) && LT(data, x->chaves[i])){
+    while((i>=0) && LT(&data, &x->chaves[i])){
       x->chaves[i+1] = x->chaves[i];
       i--;
     }
@@ -145,12 +145,12 @@ TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, char (*menor_que)(vo
     return x;
   }
   // while((i>=0) && (mat < x->chave[i])) i--;
-  while((i>=0) && LT(data, x->chaves[i])) i--;
+  while((i>=0) && LT(&data, &x->chaves[i])) i--;
   i++;
   if(x->filhos[i]->nchaves == ((2*t)-1)){
     x = divisao(x, (i+1), x->filhos[i], t);
     // if(mat > x->chave[i]) i++;
-    if(GT(data, x->chaves[i])) i++;
+    if(GT(&data, &x->chaves[i])) i++;
   }
   //x->filho[i] = insere_nao_completo(x->filho[i], mat, t);
   x->filhos[i] = insere_nao_completo(x->filhos[i], data, t, menor_que);
@@ -158,9 +158,9 @@ TARVBMG *insere_nao_completo(TARVBMG *x, void* data, int t, char (*menor_que)(vo
 }
 
 // data tem que ser alocado dinamicamente
-TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, char (*menor_que)(void*, void*)) {
+TARVBMG *TARVBMG_insere(TARVBMG *T, CHAVE data, int t, char (*menor_que)(void*, void*)) {
   // if(TARVBMG_busca(T, mat)) return T;
-  if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
+  //if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
 
   if(!T){
     T=TARVBMG_cria(t);
@@ -185,20 +185,19 @@ TARVBMG *TARVBMG_insere(TARVBMG *T, void* data, int t, char (*menor_que)(void*, 
 }
 
 
-TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*)) {
+TARVBMG* remover(TARVBMG* arv, CHAVE data, int t, char (*menor_que)(void*, void*)) {
   if(!arv) return arv;
   int i;
 
   // for(i = 0; i < arv->nchaves && arv->chave[i] < ch; i++);
-  for (i = 0; i < arv->nchaves && LT(arv->chaves[i], data); i++) {}
+  for (i = 0; i < arv->nchaves && LT(&arv->chaves[i], &data); i++) {}
 
   // if((i < arv->nchaves) && (ch == arv->chave[i]) && (arv->folha)){ //CASO 1
-  if((i < arv->nchaves) && EQ(data, arv->chaves[i]) && arv->folha){   //CASO 1
+  if((i < arv->nchaves) && EQ(&data, &arv->chaves[i]) && arv->folha){   //CASO 1
     //printf("\nCASO 1\n");
-    falloc_free(arv->chaves[i]);
     for(int j = i; j<arv->nchaves-1;j++) arv->chaves[j] = arv->chaves[j+1];
     arv->nchaves--;
-    if(!arv->nchaves){ //ultima revisao: 04/2020
+    if(!arv->nchaves) { //ultima revisao: 04/2020
       TARVBMG_libera(arv);
       arv = NULL;
     }
@@ -206,9 +205,9 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
   }
 
   // if((i < arv->nchaves) && (ch == arv->chave[i])) i++;
-  if((i < arv->nchaves) && EQ(data, arv->chaves[i])) i++;
+  if((i < arv->nchaves) && EQ(&data, &arv->chaves[i])) i++;
   TARVBMG *y = arv->filhos[i], *z = NULL;
-  if (y->nchaves == t-1){ //CASOS 3A e 3B
+  if (y->nchaves == t-1) { //CASOS 3A e 3B
     if((i < arv->nchaves) && (arv->filhos[i+1]->nchaves >=t)){ //CASO 3A
       //printf("\nCASO 3A: i menor que nchaves\n");
       z = arv->filhos[i+1];
@@ -217,17 +216,17 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
         arv->chaves[i] = z->chaves[0];     //dar a arv uma chave de z
       }
       else{
-        //arv->chaves[i] = z->chaves[0] + 1; // todo pq mais 1?
-        arv->chaves[i] = z->chaves[0];
+        //arv->chaves[i] = z->chaves[0] + 1;                       // pq mais 1? descobri já
+        arv->chaves[i] = z->chaves[0];  //arv->chaves[i].pato++;     // (*(int*)arv->chaves[i])++; // Este é o +1.
         y->chaves[t-1] = z->chaves[0];
       }
       y->nchaves++;
 
       int j;
-      for(j=0; j < z->nchaves-1; j++)  //ajustar chaves de z
+      for(j=0; j < z->nchaves-1; j++)       //ajustar chaves de z
         z->chaves[j] = z->chaves[j+1];
       y->filhos[y->nchaves] = z->filhos[0]; //enviar ponteiro menor de z para o novo elemento em y
-      for(j=0; j < z->nchaves; j++)       //ajustar filhos de z
+      for(j=0; j < z->nchaves; j++)         //ajustar filhos de z
         z->filhos[j] = z->filhos[j+1];
       z->nchaves--;
       // arv->filho[i] = remover(arv->filho[i], ch, t);
@@ -350,9 +349,12 @@ TARVBMG* remover(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*
   return arv;
 }
 
-TARVBMG* TARVBMG_retira(TARVBMG* arv, void* data, int t, char (*menor_que)(void*, void*)) {
+TARVBMG* TARVBMG_retira(TARVBMG* arv, CHAVE data, int t, char (*menor_que)(void*, void*)) {
   //if(!arv || !TARVBMG_busca(arv, k)) return arv;
-  if(!arv || !TARVBMG_busca(arv, data, menor_que)) return arv;
+  if(!arv || !TARVBMG_busca(arv, data, menor_que)) {
+    printf("Não pode remover, pois não está na árvore\n");
+    return arv;
+  }
   //return remover(arv, k, t);
   return remover(arv, data, t, menor_que);
 }
@@ -375,7 +377,7 @@ void TARVBMG_json(TARVBMG* a, char* buffer, void(*imprime)(void*, char*)) {
 
   strcat(buffer, ", \"chaves\": [");
   for (int i = 0; i < a->nchaves; i++) {
-    imprime(a->chaves[i], buffer);
+    imprime(&a->chaves[i], buffer);
     if (i < a->nchaves - 1) strcat(buffer, ", ");
   }
   strcat(buffer, "]");
@@ -417,25 +419,25 @@ void TARVBMG_map(TARVBMG* a, void(*map)(void*)) {
 
   while (p) {
     for (int i = 0; i < p->nchaves; i++) {
-      map(p->chaves[i]);
+      map(&p->chaves[i]);
     }
     p = p->prox;
   }
 }
 
 // Busca o primeiro elemento maior ou igual a data
-TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, void* data, char (*menor_que)(void*, void*)) {
+TARVBMG* TARVBMG_busca_maior_que(TARVBMG* a, CHAVE data, char (*menor_que)(void*, void*)) {
   if (!a) return NULL;
   if (a->folha) return a;
 
   int i = 0;
-  while (i < a->nchaves && !LT(data, a->chaves[i])) i++;
+  while (i < a->nchaves && !LT(&data, &a->chaves[i])) i++;
 
   return TARVBMG_busca_maior_que(a->filhos[i], data, menor_que);
 }
 
 // Executa uma função em todos os elementos da árvore que estão no intervalo [min, max]
-void TARVBMG_map_range(TARVBMG* a, void* min, void* max, char (*menor_que)(void*, void*), void(*map)(void*)) {
+void TARVBMG_map_range(TARVBMG* a, CHAVE min, CHAVE max, char (*menor_que)(void*, void*), void(*map)(void*)) {
   if (!a) return;
 
   const TARVBMG* menor = TARVBMG_busca_maior_que(a, min, menor_que);
@@ -444,10 +446,10 @@ void TARVBMG_map_range(TARVBMG* a, void* min, void* max, char (*menor_que)(void*
 
   while (p) {
     for (int i = 0; i < p->nchaves; i++) {
-      if (GT(p->chaves[i], max)) return;
+      if (GT(&p->chaves[i], &max)) return;
 
-      if (LT(min, p->chaves[i]) || EQ(min, p->chaves[i])) {
-        map(p->chaves[i]);
+      if (LT(&min, &p->chaves[i]) || EQ(&min, &p->chaves[i])) {
+        map(&p->chaves[i]);
       }
     }
     p = p->prox;
@@ -456,7 +458,7 @@ void TARVBMG_map_range(TARVBMG* a, void* min, void* max, char (*menor_que)(void*
 
 // Executa uma função em todos os elementos da árvore que estão no intervalo [min, max]
 // menor_que deve retornar 2 se os elementos forem iguais
-void TARVBMG_map_range_2(TARVBMG* a, void* min, void* max, char (*menor_que)(void*, void*), void(*map)(void*, void*), void* arg) {
+void TARVBMG_map_range_2(TARVBMG* a, CHAVE min, CHAVE max, char (*menor_que)(void*, void*), void(*map)(void*, void*), void* arg) {
   if (!a) return;
 
   const TARVBMG* menor = TARVBMG_busca_maior_que(a, min, menor_que);
@@ -465,10 +467,10 @@ void TARVBMG_map_range_2(TARVBMG* a, void* min, void* max, char (*menor_que)(voi
 
   while (p) {
     for (int i = 0; i < p->nchaves; i++) {
-      if (GT(p->chaves[i], max)) return;
+      if (GT(&p->chaves[i], &max)) return;
 
-      if (LT(min, p->chaves[i]) || menor_que(min, p->chaves[i]) == 2) {
-        map(p->chaves[i], arg);
+      if (LT(&min, &p->chaves[i]) || EQ(&min, &p->chaves[i])) {
+        map(&p->chaves[i], arg);
       }
     }
     p = p->prox;

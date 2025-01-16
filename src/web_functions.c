@@ -230,13 +230,13 @@ void search_imoveis(const char* json, const int client_socket) {
     }
 
     IMV* imv_list1[imoveis->len + 1];
-    for (int i = 0; i < imoveis->len + 1; i++) {
-        imv_list1[i] = NULL;
-    }
+    uint64_t* imv_list1_len = (uint64_t*)imv_list1;
+    *imv_list1_len = 0;
+
     IMV* imv_list2[imoveis->len + 1];
-    for (int i = 0; i < imoveis->len + 1; i++) {
-        imv_list2[i] = NULL;
-    }
+    uint64_t* imv_list2_len = (uint64_t*)imv_list2;
+    *imv_list2_len = 0;
+
     bool is_first = true;
 
     // Bairro
