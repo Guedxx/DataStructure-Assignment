@@ -180,6 +180,71 @@
             </div>
         </div>
 
+
+        <div class="imovel-edit main-divs" style="display:none;" id="imovel-edit">
+            <h2>Editar Imóvel</h2>
+            <form id="imovelFormEdit">
+                <div class="form-group">
+                    <label for="idEdit">ID:</label>
+                    <input type="number" id="idEdit" name="id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="bairroEdit">Bairro:</label>
+                    <input type="text" id="bairroEdit" name="bairro" maxlength="50" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoEdit">Tipo:</label>
+                    <input type="text" id="tipoEdit" name="tipo" maxlength="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ruaEdit">Rua:</label>
+                    <input type="text" id="ruaEdit" name="rua" maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="numeroEdit">Número:</label>
+                    <input type="number" id="numeroEdit" name="numero" placeholder="-1 se não informado">
+                </div>
+
+                <div class="form-group">
+                    <label for="precoTotalEdit">Preço Total:</label>
+                    <input type="number" id="precoTotalEdit" name="precoTotal" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="precoMetroQEdit">Preço por Metro Quadrado:</label>
+                    <input type="number" id="precoMetroQEdit" name="precoMetroQ" step="0.01" required>
+                </div>
+
+                <div class="form-group-drescricao">
+                    <label for="descricaoEdit">Descrição:</label><br>
+                    <textarea id="descricaoEdit" name="descricao" maxlength="3867" rows="10" cols="50"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="cepEdit">CEP:</label>
+                    <input type="text" id="cepEdit" name="cep" maxlength="9" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="latitudeEdit">Latitude:</label>
+                    <input type="number" id="latitudeEdit" name="latitude" step="0.000001" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="longitudeEdit">Longitude:</label>
+                    <input type="number" id="longitudeEdit" name="longitude" step="0.000001" required>
+                </div>
+
+                <div class="center-btn-div">
+                    <button type="button" id="submitButtonEdit" onclick="editar()">Editar</button>
+                </div>
+            </form>
+        </div>
+
     </main>
 </body>
 </html>

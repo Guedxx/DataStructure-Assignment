@@ -4,13 +4,6 @@
 #include "BPT_IMV.c"
 
 
-void set_imv_id(void* v, void* id) {
-    INT_IMV* int_imv = v;
-    IMV** id2imv = id;
-    *id2imv = int_imv->imv;
-}
-
-
 void submit_imovel(const char* json) {
     #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
         printf("/submit_imovel ");
@@ -41,8 +34,10 @@ void delete_imovel(const char* json) {
         return;
     }
     int id = atoi(buffer);
-    IMV* imv = NULL;
-    BPT_INT_IMV_map_range_2(imoveis->id, id, id, set_imv_id, &imv);
+    // IMV* imv = NULL;
+    // BPT_INT_IMV_map_range_2(imoveis->id, id, id, set_imv_id, &imv);
+    IMV* imv = BPT_IMV_busca_id(imoveis, id);
+
 
     #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
         printf("Removendo imovel com id %d\n", id);
@@ -203,8 +198,7 @@ void search_imoveis(const char* json, const int client_socket) {
     ImovelSearch_from_json(&imv_s, json);
 
     if (imv_s.id != -1) {
-        IMV* imv = NULL;
-        BPT_INT_IMV_map_range_2(imoveis->id, imv_s.id, imv_s.id, set_imv_id, &imv);
+        IMV* imv = BPT_IMV_busca_id(imoveis, imv_s.id);
         if (imv) {
             char buffer[4096];
             buffer[0] = '[';
