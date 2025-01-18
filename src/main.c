@@ -39,7 +39,7 @@ void load_files() {
 int main() {
     printf(
     "Presado usuário, por favor, insira o caminho do arquivo que deseja abrir."
-        "Caso não informado, será aberto o arquivo 'ALL_DATA.bin'.\n"
+    "\nCaso não informado, será aberto o arquivo 'ALL_DATA.bin'.\n"
     );
     char buf[100];
     fgets(buf, sizeof(buf), stdin);
@@ -48,7 +48,7 @@ int main() {
         strcpy(buf, "ALL_DATA.bin");
     }
     falloc_start(buf);
-    printf("Presado usuário, você deseja resetar o arquivo? (s/N)\n");
+    printf("Presado usuário, você deseja resetar o arquivo? (s/N): ");
     //scanf("%s", buf);
     fgets(buf, sizeof(buf), stdin);
     if (buf[0] == 's' || buf[0] == 'S' || buf[0] == 'y' || buf[0] == 'Y') {
@@ -116,7 +116,7 @@ int main() {
         printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
 
         if (strncmp(buf, "ver", 3) == 0) {
-            
+
             printf("Você tem essas Árvores B+: [");
             for (size_t i = 0; i < imoveis_list->len; i++) {
                 IMV_TREE_P_T* imv = TL_get(imoveis_list, i);
@@ -197,7 +197,12 @@ int main() {
             }
         }
         else if (strncmp(buf, "imprimir", 8) == 0) {
-            BPT_IMV_imprime(imoveis);
+            if (!imoveis) {
+                printf("Arvore é nula.");
+            }
+            else {
+                BPT_IMV_imprime(imoveis);
+            }
         }
         else if (strncmp(buf, "alloc", 5) == 0) {
             printf("Espaço alocado: %d\n", falloc_allocated_size());

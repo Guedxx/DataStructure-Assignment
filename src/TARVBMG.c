@@ -161,7 +161,7 @@ TARVBMG *insere_nao_completo(TARVBMG *x, CHAVE data, int t, char (*menor_que)(vo
 // data tem que ser alocado dinamicamente
 TARVBMG *TARVBMG_insere(TARVBMG *T, CHAVE data, int t, char (*menor_que)(void*, void*)) {
   // if(TARVBMG_busca(T, mat)) return T;
-  //if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apagago aprotreção contra inclusão de elementos repetidos
+  //if(TARVBMG_busca(T, data, menor_que)) return T;  // Aqui eu apago a protreção contra inclusão de elementos repetidos
 
   if(!T){
     T=TARVBMG_cria(t);
