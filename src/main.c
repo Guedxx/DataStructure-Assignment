@@ -198,7 +198,7 @@ int main() {
         }
         else if (strncmp(buf, "imprimir", 8) == 0) {
             if (!imoveis) {
-                printf("Arvore é nula.");
+                printf("Arvore é nula.\n");
             }
             else {
                 BPT_IMV_imprime(imoveis);
