@@ -150,7 +150,7 @@ void handle_request(const int client_socket) {
 }
 
 void* thread_handle_request(void* arg) {
-    int client_socket = (int) arg;
+    int client_socket = (intptr_t) arg;
     handle_request(client_socket);
     close(client_socket);
     return NULL;
@@ -205,7 +205,7 @@ void* start_web_server(void* args) {
 
     signal(SIGTERM, handle_sigint);
     while (1) {
-        const int client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_len);
+        const intptr_t client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_len);
 
         if (client_socket == -1) {
             perror("Cannot accept connection");
@@ -213,6 +213,7 @@ void* start_web_server(void* args) {
         }
 
         pthread_t thread_id;
+
         if (pthread_create(&thread_id, NULL, thread_handle_request, (void*) client_socket) != 0) {
             perror("pthread_create");
             close(client_socket);
@@ -222,4 +223,3 @@ void* start_web_server(void* args) {
     }
     return NULL;
 }
-

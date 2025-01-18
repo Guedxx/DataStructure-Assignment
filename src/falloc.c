@@ -126,7 +126,7 @@ void falloc_free(void* ptr) {
     header->is_free = true;
 
     BlockHeader* next = (BlockHeader*)((char*)header + sizeof(BlockHeader) + header->size);
-    while (next < falloc_ctx.base_addr + falloc_ctx.total_size && next->is_free) {
+    while (next < (BlockHeader*) (falloc_ctx.base_addr + falloc_ctx.total_size) && next->is_free) {
         header->size += next->size + sizeof(BlockHeader);
 
         next = (BlockHeader*)((char*)next + sizeof(BlockHeader) + next->size);
