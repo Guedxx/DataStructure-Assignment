@@ -205,6 +205,7 @@ async function editar() {
     }).then(response => {
         if (response.ok) {
             alert('Imóvel editado com sucesso!');
+            document.getElementById('imovel-edit').style.display = 'none';
         } else {
             alert('Erro ao editar imóvel.');
         }
