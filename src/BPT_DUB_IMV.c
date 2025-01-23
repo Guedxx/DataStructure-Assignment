@@ -13,21 +13,26 @@ typedef struct {
 } DUB_IMV;
 
 // Dub functions -=-
-char BPT_DUB_IMV_menor_que(void* a, void* b) {
+char BPT_DUB_IMV_cmp(void* a, void* b) {
     const DUB_IMV* a1 = a;
     const DUB_IMV* b1 = b;
 
     if (a1->data < b1->data) {
-        return true;
+        return -1;
     }
     if (a1->data == b1->data) {
-        //return a1->imv->id < b1->imv->id;
-        if (a1->id == b1->id || a1->id == -1 || b1->id == -1) {
-            return a1->pato == b1->pato ? 2 : a1->pato < b1->pato;
+        if (a1->id == -1 || b1->id == -1) {
+            return PARCIAL_EQ;
         }
-        return a1->id < b1->id;
+        if (a1->id == b1->id) {
+            if (a1->pato == b1->pato) {
+                return 0;
+            }
+            return a1->pato < b1->pato ? -1 : 1;
+        }
+        return a1->id < b1->id ? -1 : 1;
     }
-    return false;
+    return 1;
 }
 void BPT_DUB_IMV_imprime_chave(void* a) {
     const DUB_IMV* a1 = a;
@@ -59,7 +64,7 @@ BPT_DUB_IMV* BPT_DUB_IMV_busca(BPT_DUB_IMV* a, const double data, IMV* imv) {
         imv
     };
     memcpy(&dub_imv.data, &data, sizeof(double));
-    return TARVBMG_busca(a, dub_imv, BPT_DUB_IMV_menor_que);
+    return TARVBMG_busca(a, dub_imv, BPT_DUB_IMV_cmp);
 }
 
 BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, IMV* imv, const int t) {
@@ -73,7 +78,7 @@ BPT_DUB_IMV* BPT_DUB_IMV_insere(BPT_DUB_IMV* T, const double data, IMV* imv, con
         .imv = imv
     };
     memcpy(&dub_imv.data, &data, sizeof(double));
-    return TARVBMG_insere(T, dub_imv, t, BPT_DUB_IMV_menor_que);
+    return TARVBMG_insere(T, dub_imv, t, BPT_DUB_IMV_cmp);
 }
 
 BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, IMV* imv, const int t) {
@@ -87,7 +92,7 @@ BPT_DUB_IMV* BPT_DUB_IMV_retira(BPT_DUB_IMV* arv, double data, IMV* imv, const i
         .imv = imv
     };
     memcpy(&dub_imv.data, &data, sizeof(double));
-    return TARVBMG_retira(arv, dub_imv, t, BPT_DUB_IMV_menor_que);
+    return TARVBMG_retira(arv, dub_imv, t, BPT_DUB_IMV_cmp);
 }
 
 void BPT_DUB_IMV_libera(BPT_DUB_IMV *a) {
@@ -111,5 +116,5 @@ void BPT_DUB_IMV_map_range_2(BPT_DUB_IMV* a, double min, double max, void(*map)(
     CHAVE max_imv = {0, -1, NULL };
     memcpy(&min_imv.data, &min, sizeof(double));
     memcpy(&max_imv.data, &max, sizeof(double));
-    TARVBMG_map_range_2(a, min_imv, max_imv, BPT_DUB_IMV_menor_que, map, arg);
+    TARVBMG_map_range_2(a, min_imv, max_imv, BPT_DUB_IMV_cmp, map, arg);
 }

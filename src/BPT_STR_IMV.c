@@ -13,22 +13,27 @@ typedef struct {
 } STR_IMV;
 
 // Str functions -=-
-char BPT_STR_IMV_menor_que(void* a, void* b) {
+char BPT_STR_IMV_cmp(void* a, void* b) {
     const STR_IMV* a1 = a;
     const STR_IMV* b1 = b;
 
-    const int cmp = strcmp(a1->data, b1->data);
+    const char cmp = strcmp(a1->data, b1->data);
     if (cmp < 0) {
-        return true;
+        return -1;
     }
     if (cmp == 0) {
-        //return a1->id < b1->id;
-        if (a1->id == b1->id || a1->id == -1 || b1->id == -1) {
-            return a1->pato == b1->pato ? 2 : a1->pato < b1->pato;
+        if (a1->id == -1 || b1->id == -1) {
+            return PARCIAL_EQ;
         }
-        return a1->id < b1->id;
+        if (a1->id == b1->id) {
+            if (a1->pato == b1->pato) {
+                return 0;
+            }
+            return a1->pato < b1->pato ? -1 : 1;
+        }
+        return a1->id < b1->id ? -1 : 1;
     }
-    return false;
+    return 1;
 }
 void BPT_STR_IMV_imprime_chave(void* a) {
     const STR_IMV* a1 = a;
@@ -61,7 +66,7 @@ BPT_STR_IMV* BPT_STR_IMV_busca(BPT_STR_IMV* a, char* data, IMV* imv) {
         .id = imv->id
     };
 
-    return TARVBMG_busca(a, key, BPT_STR_IMV_menor_que);
+    return TARVBMG_busca(a, key, BPT_STR_IMV_cmp);
 }
 
 BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, const int t) {
@@ -77,7 +82,7 @@ BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, cons
         .id = imv->id
     };
 
-    return TARVBMG_insere(T, key, t, BPT_STR_IMV_menor_que);
+    return TARVBMG_insere(T, key, t, BPT_STR_IMV_cmp);
 }
 
 void BPT_STR_IMV_imprime(const BPT_STR_IMV* a) {
@@ -97,7 +102,7 @@ BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, IMV* imv, co
         .id = imv->id
     };
 
-    return TARVBMG_retira(arv, key, t, BPT_STR_IMV_menor_que);
+    return TARVBMG_retira(arv, key, t, BPT_STR_IMV_cmp);
 }
 
 void BPT_STR_IMV_libera(BPT_STR_IMV* a) {
@@ -125,7 +130,7 @@ void BPT_STR_IMV_map_range_2(BPT_STR_IMV* a, const char* min, const char* max, v
         .pato = 0,
         .id = -1
     };
-    TARVBMG_map_range_2(a, min_key, max_key, BPT_STR_IMV_menor_que, map, arg);
+    TARVBMG_map_range_2(a, min_key, max_key, BPT_STR_IMV_cmp, map, arg);
 }
 
 
