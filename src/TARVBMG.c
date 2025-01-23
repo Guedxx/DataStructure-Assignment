@@ -212,11 +212,18 @@ TARVBMG* remover(TARVBMG* arv, CHAVE data, int t, char (*menor_que)(void*, void*
   // if((i < arv->nchaves) && (ch == arv->chave[i])) i++;
   if((i < arv->nchaves) && EQ(&data, &arv->chaves[i])) i++;
   TARVBMG *y = arv->filhos[i], *z = NULL;
+
+  // Não deveria contecer, é só precaução
+  if (!y) {
+    printf("\033[0;31m???\033[0m\n");
+    return arv;
+  }
+
   if (y->nchaves == t-1) { //CASOS 3A e 3B
     if((i < arv->nchaves) && (arv->filhos[i+1]->nchaves >=t)){ //CASO 3A
       //printf("\nCASO 3A: i menor que nchaves\n");
       z = arv->filhos[i+1];
-      if(!y->folha){
+      if(!y->folha) {
         y->chaves[t-1] = arv->chaves[i];   //dar a y a chave i da arv
         arv->chaves[i] = z->chaves[0];     //dar a arv uma chave de z
       }

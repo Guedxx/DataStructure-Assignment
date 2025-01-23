@@ -183,6 +183,7 @@ void filter(IMV** list1, IMV** list2) {
         if (!found) {
             list1[i] = list1[len1 - 1];
             len1--;
+            i--;
         }
     }
 

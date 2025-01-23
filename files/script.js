@@ -189,6 +189,7 @@ async function editar() {
     const formData = new FormData(form);
     const jsonData = {};
 
+    jsonData['id'] = parseInt(document.getElementById('idEdit').value);
     formData.forEach((value, key) => {
         jsonData[key] = key === 'precoMetroQ' || key === 'precoTotal' || key === 'latitude' || key === 'longitude' ? parseFloat(value) :
             key === 'id' || key === 'numero' ? parseInt(value) : value;
