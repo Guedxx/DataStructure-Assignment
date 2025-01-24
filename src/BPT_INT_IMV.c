@@ -1,33 +1,32 @@
 //
 // Created by nathan on 1/2/25.
 //
-
-//#include "TImoveis.c"
 #include "TARVBMG.c"
 
 typedef struct {
-    int pato;
     int id;
     IMV* imv;
     intptr_t data;
 } INT_IMV;
 
 // Int functions -=-
-char BPT_INT_IMV_menor_que(void* a, void* b) {
+char BPT_INT_IMV_cmp(void* a, void* b) {
     const INT_IMV* a1 = a;
     const INT_IMV* b1 = b;
 
     if (a1->data < b1->data) {
-        return true;
+        return -1;
     }
     if (a1->data == b1->data) {
-        //return a1->imv->id < b1->imv->id;
-        if (a1->id == b1->id || a1->id == -1 || b1->id == -1) {
-            return a1->pato == b1->pato ? 2 : a1->pato < b1->pato;
+        if (a1->id == -1 || b1->id == -1) {
+            return PARCIAL_EQ;
         }
-        return a1->id < b1->id;
+        if (a1->id == b1->id) {
+            return 0;
+        }
+        return a1->id < b1->id ? -1 : 1;
     }
-    return false;
+    return 1;
 }
 void BPT_INT_IMV_imprime_chave(void* a) {
     const INT_IMV* a1 = a;
@@ -58,12 +57,11 @@ BPT_INT_IMV* BPT_INT_IMV_inicializa() {
 
 BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, IMV* imv) {
     CHAVE int_imv = {
-        .pato = 0,
         .id = imv ? imv->id : -1,
         .data = data,
         .imv = imv
     };
-    return TARVBMG_busca(a, int_imv, BPT_INT_IMV_menor_que);
+    return TARVBMG_busca(a, int_imv, BPT_INT_IMV_cmp);
 }
 
 BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, IMV* imv, const int t) {
@@ -72,12 +70,11 @@ BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, IMV* imv, const 
         return NULL;
     }
     CHAVE int_imv = {
-        .pato = 0,
         .id = imv->id,
         .data = data,
         .imv = imv
     };
-    return TARVBMG_insere(T, int_imv, t, BPT_INT_IMV_menor_que);
+    return TARVBMG_insere(T, int_imv, t, BPT_INT_IMV_cmp);
 }
 
 BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, IMV* imv, const int t) {
@@ -86,12 +83,11 @@ BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, IMV* imv, const int 
         return NULL;
     }
     CHAVE int_imv = {
-        .pato = 0,
         .id = imv->id,
         .data = data,
         .imv = imv
     };
-    return TARVBMG_retira(arv, int_imv, t, BPT_INT_IMV_menor_que);
+    return TARVBMG_retira(arv, int_imv, t, BPT_INT_IMV_cmp);
 }
 
 void BPT_INT_IMV_libera(BPT_INT_IMV* a) {
@@ -100,10 +96,6 @@ void BPT_INT_IMV_libera(BPT_INT_IMV* a) {
 
 void BPT_INT_IMV_imprime(const BPT_INT_IMV* a) {
     TARVBMG_imprime(a, BPT_INT_IMV_imprime_chave);
-}
-
-void BPT_INT_IMV_imprime_chaves(BPT_INT_IMV* a) {
-    TARVBMG_imprime_chaves(a, BPT_INT_IMV_imprime_chave);
 }
 
 void BPT_INT_IMV_json(BPT_INT_IMV* a, char* buffer) {
@@ -115,8 +107,8 @@ void BPT_INT_IMV_map(BPT_INT_IMV* a, void(*map)(void*)) {
 }
 
 void BPT_INT_IMV_map_range_2(BPT_INT_IMV* a, const int min, const int max, void(*map)(void*, void*), void* arg) {
-    CHAVE min_imv = {0, -1, NULL, min};
-    CHAVE max_imv = {0, -1, NULL, max};
-    TARVBMG_map_range_2(a, min_imv, max_imv, BPT_INT_IMV_menor_que, map, arg);
+    CHAVE min_imv = {-1, NULL, min};
+    CHAVE max_imv = {-1, NULL, max};
+    TARVBMG_map_range_2(a, min_imv, max_imv, BPT_INT_IMV_cmp, map, arg);
 }
 
