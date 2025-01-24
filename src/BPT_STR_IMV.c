@@ -6,7 +6,7 @@
 #include "TARVBMG.c"
 
 typedef struct {
-    int id;
+    uint64_t id;
     IMV* imv;
     char* data;
 } STR_IMV;

@@ -5,7 +5,7 @@
 
 
 typedef struct {
-    int id;                                 // ID único do imóvel
+    uint64_t id;                                 // ID único do imóvel
     char bairro[50];                       // Bairro do imóvel
     char tipo[30];                        // Tipo do imóvel (ex.: "casa", "apartamento")
     char rua[100];                       // Rua do imóvel (pode estar vazia)
@@ -19,7 +19,7 @@ typedef struct {
 } Imovel;
 
 void Imovel_print(Imovel* imovel){
-    printf("ID: %u\n", imovel->id);
+    printf("ID: %lu\n", imovel->id);
     printf("Bairro: %s\n", imovel->bairro);
     printf("Tipo: %s\n", imovel->tipo);
     printf("Rua: %s\n", imovel->rua);
@@ -34,7 +34,7 @@ void Imovel_print(Imovel* imovel){
 
 void Imovel_from_string(Imovel* imovel, char* str) {
     char* token = strtok(str, ";");
-    imovel->id = atoi(token);
+    imovel->id = atol(token);
 
     token = strtok(NULL, ";");
     strncpy(imovel->bairro, token, 50);
@@ -68,17 +68,17 @@ void Imovel_from_string(Imovel* imovel, char* str) {
 }
 
 void Imovel_to_json(Imovel* imovel, char* json) {
-    sprintf(json, "{\"id\": %u, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imovel->id, imovel->bairro, imovel->tipo, imovel->rua, imovel->numero, imovel->precoTotal, imovel->precoMetroQ, imovel->descricao, imovel->cep, imovel->latitude, imovel->longitude);
+    sprintf(json, "{\"id\": %lu, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imovel->id, imovel->bairro, imovel->tipo, imovel->rua, imovel->numero, imovel->precoTotal, imovel->precoMetroQ, imovel->descricao, imovel->cep, imovel->latitude, imovel->longitude);
 }
 
 void Imovel_from_json(Imovel* imovel, const char* json) {
-    sscanf(json, "{\"id\": %u, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %lf, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
+    sscanf(json, "{\"id\": %lu, \"bairro\": \"%[^\"]\", \"tipo\": \"%[^\"]\", \"rua\": \"%[^\"]\", \"numero\": %d, \"precoTotal\": %lf, \"precoMetroQ\": %lf, \"descricao\": \"%[^\"]\", \"cep\": \"%[^\"]\", \"latitude\": %lf, \"longitude\": %lf}", &imovel->id, imovel->bairro, imovel->tipo, imovel->rua, &imovel->numero, &imovel->precoTotal, &imovel->precoMetroQ, imovel->descricao, imovel->cep, &imovel->latitude, &imovel->longitude);
 }
 
 // imv ----------------------------------------------------------------------------------------------------------------------------
 
 typedef struct {
-    int id;                             // ID único do imóvel
+    uint64_t id;                             // ID único do imóvel
     int numero;                        // Número do imóvel (pode ser vazio, -1 se não informado)
 
     double precoTotal;               // Preço total do imóvel
@@ -99,7 +99,7 @@ void IMV_print(IMV* imv) {
         printf("Imóvel é nulo\n");
         return;
     }
-    printf("ID: %u\n", imv->id);
+    printf("ID: %lu\n", imv->id);
     printf("Bairro: %s\n", imv->bairro);
     printf("Tipo: %s\n", imv->tipo);
     printf("Rua: %s\n", imv->rua);
@@ -117,7 +117,7 @@ void IMV_to_json(IMV* imv, char* json) {
         sprintf(json, "{}");
         return;
     }
-    sprintf(json, "{\"id\": %u, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imv->id, imv->bairro, imv->tipo, imv->rua, imv->numero, imv->precoTotal, imv->precoMetroQ, imv->descricao, imv->cep, imv->latitude, imv->longitude);
+    sprintf(json, "{\"id\": %lu, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imv->id, imv->bairro, imv->tipo, imv->rua, imv->numero, imv->precoTotal, imv->precoMetroQ, imv->descricao, imv->cep, imv->latitude, imv->longitude);
 }
 
 #include <stddef.h>

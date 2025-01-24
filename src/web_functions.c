@@ -33,7 +33,7 @@ void delete_imovel(const char* json) {
     if (!extract_json_value(json, "id", buffer, sizeof(buffer))) {
         return;
     }
-    int id = atoi(buffer);
+    uint64_t id = atol(buffer);
     // IMV* imv = NULL;
     // BPT_INT_IMV_map_range_2(imoveis->id, id, id, set_imv_id, &imv);
     IMV* imv = BPT_IMV_busca_id(imoveis, id);
@@ -53,7 +53,7 @@ void delete_imovel(const char* json) {
 
 // search_imoveis --------------------------------------------------------------------------------------
 typedef struct {
-    int id;
+    uint64_t id;
     char bairro[100];
     char rua[100];
     char tipo[50];
@@ -71,7 +71,7 @@ void ImovelSearch_from_json(ImovelSearch* imv, const char* json) {
 
     // Parse each field
     if (extract_json_value(json, "id", buffer, sizeof(buffer))) {
-        imv->id = atoi(buffer);
+        imv->id = atol(buffer);
     } else {
         imv->id = -1;
     }

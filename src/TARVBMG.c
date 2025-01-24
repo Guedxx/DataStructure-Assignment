@@ -3,7 +3,7 @@
 #include "falloc.c"
 
 typedef struct {
-  int id;
+  uint64_t id;
   IMV* imv;
   intptr_t data;
 } CHAVE;

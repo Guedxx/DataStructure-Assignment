@@ -4,7 +4,7 @@
 #include "TARVBMG.c"
 
 typedef struct {
-    int id;
+    uint64_t id;
     IMV* imv;
     intptr_t data;
 } INT_IMV;
@@ -30,7 +30,7 @@ char BPT_INT_IMV_cmp(void* a, void* b) {
 }
 void BPT_INT_IMV_imprime_chave(void* a) {
     const INT_IMV* a1 = a;
-    printf("%ld ", a1->data);
+    printf("%lu ", a1->data);
 }
 void BPT_INT_IMV_imprime_pnt(void* a) {
     const INT_IMV* a1 = a;
@@ -39,7 +39,7 @@ void BPT_INT_IMV_imprime_pnt(void* a) {
 void BPT_INT_IMV_imprime_chave_json(void* a, char* buffer) {
     const INT_IMV* a1 = a;
     char buffer2[20];
-    sprintf(buffer2, "%ld", a1->data);
+    sprintf(buffer2, "%lu", a1->data);
     strcat(buffer, buffer2);
 }
 // Int functions -=-
@@ -55,7 +55,7 @@ BPT_INT_IMV* BPT_INT_IMV_inicializa() {
     return TARVBMG_inicializa();
 }
 
-BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, IMV* imv) {
+BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, uint64_t data, IMV* imv) {
     CHAVE int_imv = {
         .id = imv ? imv->id : -1,
         .data = data,
@@ -64,7 +64,7 @@ BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, IMV* imv) {
     return TARVBMG_busca(a, int_imv, BPT_INT_IMV_cmp);
 }
 
-BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, IMV* imv, const int t) {
+BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const uint64_t data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
@@ -77,7 +77,7 @@ BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, IMV* imv, const 
     return TARVBMG_insere(T, int_imv, t, BPT_INT_IMV_cmp);
 }
 
-BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, IMV* imv, const int t) {
+BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, uint64_t data, IMV* imv, const int t) {
     if (!imv) {
         perror("Imovel nulo");
         return NULL;
@@ -106,7 +106,7 @@ void BPT_INT_IMV_map(BPT_INT_IMV* a, void(*map)(void*)) {
     TARVBMG_map(a, map);
 }
 
-void BPT_INT_IMV_map_range_2(BPT_INT_IMV* a, const int min, const int max, void(*map)(void*, void*), void* arg) {
+void BPT_INT_IMV_map_range_2(BPT_INT_IMV* a, const uint64_t min, const uint64_t max, void(*map)(void*, void*), void* arg) {
     CHAVE min_imv = {-1, NULL, min};
     CHAVE max_imv = {-1, NULL, max};
     TARVBMG_map_range_2(a, min_imv, max_imv, BPT_INT_IMV_cmp, map, arg);

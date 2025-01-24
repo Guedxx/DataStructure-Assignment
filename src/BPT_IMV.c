@@ -27,7 +27,7 @@ typedef struct imovel_tree {
 BPT_IMV* imoveis;
 int imoveis_t = 2;
 
-IMV* BPT_IMV_busca_id(const BPT_IMV* a, int id);
+IMV* BPT_IMV_busca_id(const BPT_IMV* a, uint64_t id);
 
 BPT_IMV* BPT_IMV_cria(const int t) {
     BPT_IMV* novo = falloc(sizeof(BPT_IMV));
@@ -91,7 +91,7 @@ void BPT_IMV_remove(BPT_IMV* a, IMV* imovel, const int t) {
 }
 
 void BPT_IMV_imprime(const BPT_IMV* a) {
-    printf("Imovel len(%d) at (%p):\n", a->len, a);
+    printf("imprimindo arvore de imoveis\n");
     printf("ID:\n");
     BPT_INT_IMV_imprime(a->id);
     printf("Bairro:\n");
@@ -108,9 +108,10 @@ void BPT_IMV_imprime(const BPT_IMV* a) {
     BPT_DUB_IMV_imprime(a->latitude);
     printf("Longitude:\n");
     BPT_DUB_IMV_imprime(a->longitude);
+    printf("Imovel len(%d) at (%p):\n", a->len, a);
 }
 
-IMV* BPT_IMV_busca_id(const BPT_IMV* a, const int id) {
+IMV* BPT_IMV_busca_id(const BPT_IMV* a, const uint64_t id) {
     BPT_INT_IMV* b = BPT_INT_IMV_busca(a->id, id, NULL);
     if (!b) return NULL;
 
