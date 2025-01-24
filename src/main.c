@@ -219,4 +219,5 @@ int main() {
     }
 
     handle_sigint(0);
+    sleep(1);
 }
