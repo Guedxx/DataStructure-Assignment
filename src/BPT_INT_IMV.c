@@ -1,12 +1,9 @@
 //
 // Created by nathan on 1/2/25.
 //
-
-//#include "TImoveis.c"
 #include "TARVBMG.c"
 
 typedef struct {
-    int pato;
     int id;
     IMV* imv;
     intptr_t data;
@@ -25,10 +22,7 @@ char BPT_INT_IMV_cmp(void* a, void* b) {
             return PARCIAL_EQ;
         }
         if (a1->id == b1->id) {
-            if (a1->pato == b1->pato) {
-                return 0;
-            }
-            return a1->pato < b1->pato ? -1 : 1;
+            return 0;
         }
         return a1->id < b1->id ? -1 : 1;
     }
@@ -63,7 +57,6 @@ BPT_INT_IMV* BPT_INT_IMV_inicializa() {
 
 BPT_INT_IMV* BPT_INT_IMV_busca(BPT_INT_IMV* a, int data, IMV* imv) {
     CHAVE int_imv = {
-        .pato = 0,
         .id = imv ? imv->id : -1,
         .data = data,
         .imv = imv
@@ -77,7 +70,6 @@ BPT_INT_IMV* BPT_INT_IMV_insere(BPT_INT_IMV* T, const int data, IMV* imv, const 
         return NULL;
     }
     CHAVE int_imv = {
-        .pato = 0,
         .id = imv->id,
         .data = data,
         .imv = imv
@@ -91,7 +83,6 @@ BPT_INT_IMV* BPT_INT_IMV_retira(BPT_INT_IMV* arv, int data, IMV* imv, const int 
         return NULL;
     }
     CHAVE int_imv = {
-        .pato = 0,
         .id = imv->id,
         .data = data,
         .imv = imv
@@ -107,10 +98,6 @@ void BPT_INT_IMV_imprime(const BPT_INT_IMV* a) {
     TARVBMG_imprime(a, BPT_INT_IMV_imprime_chave);
 }
 
-void BPT_INT_IMV_imprime_chaves(BPT_INT_IMV* a) {
-    TARVBMG_imprime_chaves(a, BPT_INT_IMV_imprime_chave);
-}
-
 void BPT_INT_IMV_json(BPT_INT_IMV* a, char* buffer) {
     TARVBMG_json(a, buffer, BPT_INT_IMV_imprime_chave_json);
 }
@@ -120,8 +107,8 @@ void BPT_INT_IMV_map(BPT_INT_IMV* a, void(*map)(void*)) {
 }
 
 void BPT_INT_IMV_map_range_2(BPT_INT_IMV* a, const int min, const int max, void(*map)(void*, void*), void* arg) {
-    CHAVE min_imv = {0, -1, NULL, min};
-    CHAVE max_imv = {0, -1, NULL, max};
+    CHAVE min_imv = {-1, NULL, min};
+    CHAVE max_imv = {-1, NULL, max};
     TARVBMG_map_range_2(a, min_imv, max_imv, BPT_INT_IMV_cmp, map, arg);
 }
 

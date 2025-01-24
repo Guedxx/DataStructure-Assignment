@@ -120,6 +120,31 @@ void IMV_to_json(IMV* imv, char* json) {
     sprintf(json, "{\"id\": %u, \"bairro\": \"%s\", \"tipo\": \"%s\", \"rua\": \"%s\", \"numero\": %d, \"precoTotal\": %f, \"precoMetroQ\": %f, \"descricao\": \"%s\", \"cep\": \"%s\", \"latitude\": %f, \"longitude\": %f}", imv->id, imv->bairro, imv->tipo, imv->rua, imv->numero, imv->precoTotal, imv->precoMetroQ, imv->descricao, imv->cep, imv->latitude, imv->longitude);
 }
 
+#include <stddef.h>
+
+char remover_acentos(char c) {
+    static const char acentuados[] =
+        "áàãâéèêíìîóòõôúùûçÁÀÃÂÉÈÊÍÌÎÓÒÕÔÚÙÛÇ";
+    static const char sem_acento[] =
+        "aaaaeeeiiioooouuucAAAAEEEIIIOOOOUUUC";
+
+    for (size_t i = 0; acentuados[i] != '\0'; i++) {
+        if (c == acentuados[i]) {
+            return sem_acento[i];
+        }
+    }
+    return c;
+}
+
+void strcpy_acentos(char* dest, const char* src) {
+    while (*src) {
+        *dest = remover_acentos(*src);
+        dest++;
+        src++;
+    }
+    *dest = '\0';
+}
+
 IMV* IMV_from_Imovel(Imovel* imovel) {
     IMV* imv = falloc(sizeof(IMV));
     imv->id = imovel->id;
@@ -136,15 +161,15 @@ IMV* IMV_from_Imovel(Imovel* imovel) {
 
     len = strlen(imovel->bairro);
     imv->bairro = falloc(len + 1);
-    strcpy(imv->bairro, imovel->bairro);
+    strcpy_acentos(imv->bairro, imovel->bairro);
 
     len = strlen(imovel->tipo);
     imv->tipo = falloc(len + 1);
-    strcpy(imv->tipo, imovel->tipo);
+    strcpy_acentos(imv->tipo, imovel->tipo);
 
     len = strlen(imovel->rua);
     imv->rua = falloc(len + 1);
-    strcpy(imv->rua, imovel->rua);
+    strcpy_acentos(imv->rua, imovel->rua);
 
     return imv;
 }
