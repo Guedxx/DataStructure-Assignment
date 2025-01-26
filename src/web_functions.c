@@ -7,7 +7,7 @@
 void submit_imovel(const char* json) {
     #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
         printf("/submit_imovel ");
-        printf("Recebido JSON:\n%s\n", json);
+        printf("Recebido JSON:\n    %s\n", json);
     #endif
 
 
@@ -16,7 +16,6 @@ void submit_imovel(const char* json) {
 
     #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
         printf("Adicionando imovel\n");
-        Imovel_print(&imovel);
     #endif
 
     IMV* imv = IMV_from_Imovel(&imovel);
@@ -26,7 +25,7 @@ void submit_imovel(const char* json) {
 void delete_imovel(const char* json) {
     #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
         printf("/delete_imovel ");
-        printf("Recebido JSON:\n%s\n", json);
+        printf("Recebido JSON:\n    %s\n", json);
     #endif
 
     char buffer[128];
@@ -40,8 +39,7 @@ void delete_imovel(const char* json) {
 
 
     #if defined(DEBUG_WEB1) || defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
-        printf("Removendo imovel com id %d\n", id);
-        IMV_print(imv);
+        printf("Removendo imovel com id %lu\n", id);
     #endif
 
     if (imv) {
@@ -193,7 +191,7 @@ void filter(IMV** list1, IMV** list2) {
 void search_imoveis(const char* json, const int client_socket) {
     #if defined(DEBUG_WEB2) || defined(DEBUG_WEB3)
         printf("/search_imoveis ");
-        printf("Recebido JSON:\n%s\n", json);
+        printf("Recebido JSON:\n    %s\n", json);
     #endif
     ImovelSearch imv_s;
     ImovelSearch_from_json(&imv_s, json);

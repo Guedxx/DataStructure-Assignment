@@ -2,6 +2,7 @@
 // Created by nathan on 1/1/25.
 //
 #pragma once
+#define _GNU_SOURCE
 
 #include "TImoveis.c"
 #include "BPT_INT_IMV.c"
@@ -10,7 +11,7 @@
 #include "json.c"
 #include <math.h>
 
-typedef struct imovel_tree {
+typedef struct {
     uint32_t len;
     BPT_INT_IMV* id;
     BPT_STR_IMV* bairro;
@@ -152,3 +153,67 @@ void IMV_add_from_csv(const char* file) {
 
     munmap(data, size);
 }
+
+
+
+
+
+// TESTES
+// #define NUM_TESTES 10000
+// #define T_TESTES 3
+//
+// void main() {
+//     falloc_start("BPT_IMV_TEST.bin");
+//     falloc_free_all();
+//     BPT_IMV* arvore = BPT_IMV_cria(T_TESTES);
+//
+//     uint64_t ids[NUM_TESTES];
+//     int index = 0;
+//
+//     // Inserção de elementos aleatórios
+//     for (int i = 0; i < NUM_TESTES; i++) {
+//         Imovel imovel;
+//         imovel.id = rand();
+//         ids[index++] = imovel.id;
+//         sprintf(imovel.bairro, "Bairro: %d", i);
+//         sprintf(imovel.rua, "Rua: %d", i);
+//         sprintf(imovel.tipo, "Típó");
+//         sprintf(imovel.cep, "CEP");
+//         imovel.precoTotal = (double)(rand() % 1000000) / 100.0;
+//         imovel.latitude = (double)(rand() % 180) - 90;
+//         imovel.longitude = (double)(rand() % 360) - 180;
+//
+//         IMV* imv = IMV_from_Imovel(&imovel);
+//
+//         BPT_IMV_insere(arvore, imv, T_TESTES);
+//         printf("Inserido imóvel com ID %lu\n", imovel.id);
+//     }
+//
+//     //BPT_IMV_imprime(arvore);
+//     printf("=========================\n");
+//     printf("Arvore len(%d)\n", arvore->len);
+//     printf("=========================\n");
+//
+//     // Remoção de elementos aleatórios
+//     for (int i = 0; i < NUM_TESTES / 2; i++) {
+//         const uint64_t remove_index = rand() % index;
+//         const uint64_t id_remover = ids[remove_index];
+//         ids[remove_index] = ids[--index];
+//
+//         IMV* imovel = BPT_IMV_busca_id(arvore, id_remover);
+//         if (imovel) {
+//             BPT_IMV_remove(arvore, imovel, T_TESTES);
+//             printf("Removido imóvel com ID %lu\n", id_remover);
+//         } else {
+//             printf("Imóvel com ID %lu não encontrado para remoção\n", id_remover);
+//         }
+//     }
+//
+//     //BPT_IMV_imprime(arvore);
+//     printf("=========================\n");
+//     printf("Arvore len(%d)\n", arvore->len);
+//     printf("=========================\n");
+//
+//     BPT_IMV_libera(arvore);
+//     falloc_end();
+// }
