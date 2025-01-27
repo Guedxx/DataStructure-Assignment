@@ -64,7 +64,7 @@ void BPT_IMV_libera(BPT_IMV* a) {
 
 void BPT_IMV_insere(BPT_IMV* a, IMV* imovel, const int t) {
     if (BPT_IMV_busca_id(a, imovel->id)) {
-        printf("Imovel com id %lu já existe\n", imovel->id);
+        printf("\033[93mImovel com id %lu já existe\033[0;0m\n", imovel->id);
         return;
     }
 

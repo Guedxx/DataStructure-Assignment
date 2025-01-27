@@ -45,6 +45,9 @@ void delete_imovel(const char* json) {
     if (imv) {
         BPT_IMV_remove(imoveis, imv, imoveis_t);
     }
+    else {
+        printf("\033[93mImovel com id %lu não encontrado\033[0;0m\n", id);
+    }
 }
 
 
