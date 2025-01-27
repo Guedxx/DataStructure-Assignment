@@ -79,8 +79,8 @@ BPT_STR_IMV* BPT_STR_IMV_insere(BPT_STR_IMV* T, const char* data, IMV* imv, cons
     return TARVBMG_insere(T, key, t, BPT_STR_IMV_cmp);
 }
 
-void BPT_STR_IMV_imprime(const BPT_STR_IMV* a) {
-    TARVBMG_imprime(a, BPT_STR_IMV_imprime_chave);
+int BPT_STR_IMV_imprime(const BPT_STR_IMV* a) {
+    return TARVBMG_imprime(a, BPT_STR_IMV_imprime_chave);
 }
 
 BPT_STR_IMV* BPT_STR_IMV_retira(BPT_STR_IMV* arv, const char* data, IMV* imv, const int t) {
@@ -107,12 +107,12 @@ void BPT_STR_IMV_json(BPT_STR_IMV* a, char* buffer) {
 }
 
 void BPT_STR_IMV_map_range_2(BPT_STR_IMV* a, const char* min, const char* max, void(*map)(void*, void*), void* arg) {
-    CHAVE min_key = {
+    const CHAVE min_key = {
         .data = (intptr_t) min,
         .imv = NULL,
         .id = -1
     };
-    CHAVE max_key = {
+    const CHAVE max_key = {
         .data = (intptr_t) max,
         .imv = NULL,
         .id = -1

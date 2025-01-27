@@ -94,22 +94,47 @@ void BPT_IMV_remove(BPT_IMV* a, IMV* imovel, const int t) {
 
 void BPT_IMV_imprime(const BPT_IMV* a) {
     printf("imprimindo arvore de imoveis\n");
+
     printf("ID:\n");
-    BPT_INT_IMV_imprime(a->id);
+    int len = BPT_INT_IMV_imprime(a->id);
+    printf("ID Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Bairro:\n");
-    BPT_STR_IMV_imprime(a->bairro);
+    len = BPT_STR_IMV_imprime(a->bairro);
+    printf("Bairro Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Rua:\n");
-    BPT_STR_IMV_imprime(a->rua);
+    len = BPT_STR_IMV_imprime(a->rua);
+    printf("Rua Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Tipo:\n");
-    BPT_STR_IMV_imprime(a->tipo);
+    len = BPT_STR_IMV_imprime(a->tipo);
+    printf("Tipo Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("CEP:\n");
-    BPT_STR_IMV_imprime(a->cep);
+    len = BPT_STR_IMV_imprime(a->cep);
+    printf("CEP Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Preço:\n");
-    BPT_DUB_IMV_imprime(a->preco);
+    len = BPT_DUB_IMV_imprime(a->preco);
+    printf("Preço Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Latitude:\n");
-    BPT_DUB_IMV_imprime(a->latitude);
+    len = BPT_DUB_IMV_imprime(a->latitude);
+    printf("Latitude Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Longitude:\n");
-    BPT_DUB_IMV_imprime(a->longitude);
+    len = BPT_DUB_IMV_imprime(a->longitude);
+    printf("Longitude Len: (%d)\n", len);
+    if (len != a->len) {printf("ERRO: len(%d) != a->len(%d)\n", len, a->len); exit(1);}
+
     printf("Imovel len(%d) at (%p):\n", a->len, a);
 }
 
@@ -159,61 +184,85 @@ void IMV_add_from_csv(const char* file) {
 
 
 // TESTES
-// #define NUM_TESTES 10000
-// #define T_TESTES 3
-//
-// void main() {
-//     falloc_start("BPT_IMV_TEST.bin");
-//     falloc_free_all();
-//     BPT_IMV* arvore = BPT_IMV_cria(T_TESTES);
-//
-//     uint64_t ids[NUM_TESTES];
-//     int index = 0;
-//
-//     // Inserção de elementos aleatórios
-//     for (int i = 0; i < NUM_TESTES; i++) {
-//         Imovel imovel;
-//         imovel.id = rand();
-//         ids[index++] = imovel.id;
-//         sprintf(imovel.bairro, "Bairro: %d", i);
-//         sprintf(imovel.rua, "Rua: %d", i);
-//         sprintf(imovel.tipo, "Típó");
-//         sprintf(imovel.cep, "CEP");
-//         imovel.precoTotal = (double)(rand() % 1000000) / 100.0;
-//         imovel.latitude = (double)(rand() % 180) - 90;
-//         imovel.longitude = (double)(rand() % 360) - 180;
-//
-//         IMV* imv = IMV_from_Imovel(&imovel);
-//
-//         BPT_IMV_insere(arvore, imv, T_TESTES);
-//         printf("Inserido imóvel com ID %lu\n", imovel.id);
-//     }
-//
-//     //BPT_IMV_imprime(arvore);
-//     printf("=========================\n");
-//     printf("Arvore len(%d)\n", arvore->len);
-//     printf("=========================\n");
-//
-//     // Remoção de elementos aleatórios
-//     for (int i = 0; i < NUM_TESTES / 2; i++) {
-//         const uint64_t remove_index = rand() % index;
-//         const uint64_t id_remover = ids[remove_index];
-//         ids[remove_index] = ids[--index];
-//
-//         IMV* imovel = BPT_IMV_busca_id(arvore, id_remover);
-//         if (imovel) {
-//             BPT_IMV_remove(arvore, imovel, T_TESTES);
-//             printf("Removido imóvel com ID %lu\n", id_remover);
-//         } else {
-//             printf("Imóvel com ID %lu não encontrado para remoção\n", id_remover);
-//         }
-//     }
-//
-//     //BPT_IMV_imprime(arvore);
-//     printf("=========================\n");
-//     printf("Arvore len(%d)\n", arvore->len);
-//     printf("=========================\n");
-//
-//     BPT_IMV_libera(arvore);
-//     falloc_end();
-// }
+#define NUM_TESTES 1000
+#define T_TESTES 3
+
+void main() {
+    falloc_start("BPT_IMV_TEST.bin");
+    falloc_free_all();
+    BPT_IMV* arvore = BPT_IMV_cria(T_TESTES);
+
+    uint64_t ids[NUM_TESTES];
+    int index = 0;
+
+    // Inserção de elementos aleatórios
+    for (int i = 0; i < NUM_TESTES; i++) {
+        Imovel imovel;
+        imovel.id = rand();
+        ids[index++] = imovel.id;
+        sprintf(imovel.bairro, "Bairro: %d", i);
+        sprintf(imovel.rua, "Rua: %d", i);
+        sprintf(imovel.tipo, "Típó");
+        sprintf(imovel.cep, "CEP");
+        imovel.precoTotal = (double)(rand() % 1000000) / 100.0;
+        imovel.latitude = (double)(rand() % 180) - 90;
+        imovel.longitude = (double)(rand() % 360) - 180;
+
+        IMV* imv = IMV_from_Imovel(&imovel);
+
+        BPT_IMV_insere(arvore, imv, T_TESTES);
+        //printf("Inserido imóvel com ID %lu\n", imovel.id);
+    }
+
+    printf("=========================\n");
+    printf("Arvore len(%d)\n", arvore->len);
+    BPT_IMV_imprime(arvore);
+    printf("=========================\n");
+
+    // Remoção de elementos aleatórios
+    for (int i = 0; i < NUM_TESTES / 2; i++) {
+        const uint64_t remove_index = rand() % index;
+        const uint64_t id_remover = ids[remove_index];
+        ids[remove_index] = ids[--index];
+
+        IMV* imovel = BPT_IMV_busca_id(arvore, id_remover);
+        if (imovel) {
+            BPT_IMV_remove(arvore, imovel, T_TESTES);
+            //printf("Removido imóvel com ID %lu\n", id_remover);
+        } else {
+            printf("Imóvel com ID %lu não encontrado para remoção\n", id_remover);
+        }
+    }
+
+    printf("=========================\n");
+    printf("Arvore len(%d)\n", arvore->len);
+    BPT_IMV_imprime(arvore);
+    printf("=========================\n");
+
+    // Inserção de elementos aleatórios
+    for (int i = 0; i < NUM_TESTES / 2; i++) {
+        Imovel imovel;
+        imovel.id = rand();
+        ids[index++] = imovel.id;
+        sprintf(imovel.bairro, "Bairro: %d", i);
+        sprintf(imovel.rua, "Rua: %d", i);
+        sprintf(imovel.tipo, "Típó");
+        sprintf(imovel.cep, "CEP");
+        imovel.precoTotal = (double)(rand() % 1000000) / 100.0;
+        imovel.latitude = (double)(rand() % 180) - 90;
+        imovel.longitude = (double)(rand() % 360) - 180;
+
+        IMV* imv = IMV_from_Imovel(&imovel);
+
+        BPT_IMV_insere(arvore, imv, T_TESTES);
+        //printf("Inserido imóvel com ID %lu\n", imovel.id);
+    }
+
+    printf("=========================\n");
+    printf("Arvore len(%d)\n", arvore->len);
+    BPT_IMV_imprime(arvore);
+    printf("=========================\n");
+
+    BPT_IMV_libera(arvore);
+    falloc_end();
+}

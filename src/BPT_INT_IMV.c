@@ -94,8 +94,8 @@ void BPT_INT_IMV_libera(BPT_INT_IMV* a) {
     TARVBMG_libera(a);
 }
 
-void BPT_INT_IMV_imprime(const BPT_INT_IMV* a) {
-    TARVBMG_imprime(a, BPT_INT_IMV_imprime_chave);
+int BPT_INT_IMV_imprime(const BPT_INT_IMV* a) {
+    return TARVBMG_imprime(a, BPT_INT_IMV_imprime_chave);
 }
 
 void BPT_INT_IMV_json(BPT_INT_IMV* a, char* buffer) {

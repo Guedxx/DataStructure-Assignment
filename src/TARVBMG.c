@@ -62,23 +62,26 @@ void TARVBMG_libera(TARVBMG *a) {
 }
 
 
-void imp_rec(const TARVBMG *a, const int andar, void(*imprime)(void*)){ 
+void imp_rec(const TARVBMG *a, const int andar, int* len, void(*imprime)(void*)){
   if(a) {
     int i;
     for(i=0; i<=a->nchaves-1; i++){
-      imp_rec(a->filho[i],andar+1, imprime);
+      imp_rec(a->filho[i],andar+1, len, imprime);
       for(int j = 0; j<=andar; j++) printf("\t");
       //printf("%d\n", a->chaves[i]);
       imprime(&a->chaves[i]);
       printf("\n");
+      (*len)++;
     }
-    imp_rec(a->filho[i],andar+1, imprime);
+    imp_rec(a->filho[i],andar+1, len, imprime);
   }
 }
 
 
-void TARVBMG_imprime(const TARVBMG *a, void(*imprime)(void*)) {
-  imp_rec(a, 0, imprime);
+int TARVBMG_imprime(const TARVBMG *a, void(*imprime)(void*)) {
+  int len = 0;
+  imp_rec(a, 0, &len, imprime);
+  return len;
 }
 
 TARVBMG *TARVBMG_busca(TARVBMG* x, CHAVE data, char (*cmp)(void*, void*)) {
